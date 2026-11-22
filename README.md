@@ -287,7 +287,7 @@ board with an RP2040 and Wi-Fi costs [$6](https://www.raspberrypi.com/news/raspb
 The first thing we check is that someone outside the team can use the library without our help.
 What comes next is funded with [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
 awards of up to $15K for early experimentation and prototyping, offered through the Stellar
-ambassador chapters. The team already won one with a previous project, Kiba.
+ambassador chapters.
 
 ## Feedback and contributing
 
@@ -311,5 +311,5 @@ for NFC cards, runs on this SDK.
 
 | Who | Role | What they bring |
 |---|---|---|
-| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware and Stellar | Electronics engineer: electronics engineering and blockchain integration for microcontrollers. His previous project on Stellar, [Kiba](https://github.com/CoKeFish/kiba) (pay-per-call payments in USDC), won a Stellar Instaward. Before that he built [Mesura](https://github.com/CoKeFish/mesura-firmware), IoT sensors on Arduino, ESP32 and Raspberry Pi |
+| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware and Stellar | Electronics engineer: electronics engineering and blockchain integration for microcontrollers. His previous project on Stellar is [Kiba](https://github.com/CoKeFish/kiba), pay-per-call payments in USDC, built for the Stellar PULSO Hackathon. Before that he built [Mesura](https://github.com/CoKeFish/mesura-firmware), IoT sensors on Arduino, ESP32 and Raspberry Pi |
 | **Clyn Roje Quispe Villegas** | Business and product | Business development and product focus |
