@@ -14,7 +14,7 @@ Conventions:
 - Nothing allocates memory: you pass every buffer, with its capacity.
 - Functions that return a length return `0` when the output does not fit.
 
-## What the board provides
+## What the microcontroller provides
 
 ```c
 typedef struct {

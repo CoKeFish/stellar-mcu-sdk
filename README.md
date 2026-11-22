@@ -4,10 +4,11 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 ![Language](https://img.shields.io/badge/language-C99-blue)
-![Boards](https://img.shields.io/badge/boards-ESP32%20%7C%20ESP32--S3-blue)
+![Microcontrollers](https://img.shields.io/badge/microcontrollers-ESP32%20%7C%20ESP32--S3-blue)
 ![Network](https://img.shields.io/badge/Stellar-testnet-blue)
 
-**Stellar payments on any device.** `stellar-mcu-sdk` is a C library for microcontrollers. It talks
+**Stellar payments on IoT devices.** `stellar-mcu-sdk` is a C library for microcontrollers, made to
+bring payment systems to IoT devices such as turnstiles, dispensers and vending machines. It talks
 to [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) and builds and signs
 transactions on the device itself, with no server of your own in between. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
@@ -28,27 +29,27 @@ It provides:
 | Piece | What the device does |
 |---|---|
 | **Charge** | Builds the payment request (SEP-7) to show it as a QR code |
-| **Confirm** | Asks a Stellar RPC node and checks by itself that the payment arrived, with its amount and its order number |
+| **Confirm** | Asks a Stellar RPC node and checks by itself that the payment arrived, with its amount and its order number, if the payment carries one |
 | **Pay** | Keeps its own key, builds the transaction, signs it and sends it: a classic payment or a call to a token contract (`transfer`, `transfer_from`) |
 
 What you can build with those pieces:
 
-- **A payment terminal.** Paizap's terminal for NFC cards charges with `transfer_from`, built and
-  signed on the board.
-- **A machine that hands over a product when it is paid,** such as a vending machine or a
-  dispenser: it shows the payment request as a QR code and confirms the payment on the node.
+- **A device that acts when it is paid,** such as a turnstile, a dispenser or a vending machine:
+  it shows the payment request as a QR code and confirms the payment on the node.
+- **A payment terminal.** Paizap's demo terminal for NFC cards charges with `transfer_from`, built
+  and signed on the device.
 - **A payment notifier:** a screen or a buzzer that announces each payment an account receives.
   It holds no key.
 
-## Board support
+## Supported microcontrollers
 
-| Board | Framework | Status | SHA-256 | Ed25519 |
+| Microcontroller | Framework | Status | SHA-256 | Ed25519 |
 |---|---|---|---|---|
 | ESP32-S3 | Arduino, with PlatformIO | Tested on hardware, on testnet | mbedTLS, included in the ESP32 Arduino core | Monocypher 4.0.2 |
 | ESP32 (classic) | Arduino, with PlatformIO | Builds | mbedTLS, included in the ESP32 Arduino core | Monocypher 4.0.2 |
 
 The core ([`src/`](src/)) is portable C99: it allocates no memory and includes nothing from any
-chip. A new board only needs an adapter in [`platforms/`](platforms/) with the secure connection
+chip. A new microcontroller family only needs an adapter in [`platforms/`](platforms/) with the secure connection
 to the node, plus two functions: SHA-256 and the Ed25519 signature.
 
 ## Installation
@@ -80,12 +81,12 @@ Then include it:
 #include "stellar_rpc.h"   // the ESP32 client for Stellar RPC
 ```
 
-With another build system, compile `src/stellar_mcu.c`, your board's adapter and the two
+With another build system, compile `src/stellar_mcu.c`, your microcontroller's adapter and the two
 Monocypher files, and add those three folders to the include path.
 
 ## Quick examples
 
-`CRYPTO` holds the two functions your board provides (`stl_crypto`); the
+`CRYPTO` holds the two functions your microcontroller provides (`stl_crypto`); the
 [full example](examples/esp32_pay_and_confirm/src/main.cpp) shows them for ESP32.
 
 ### Send a payment
@@ -95,7 +96,7 @@ stl_tx t = {0};
 memcpy(t.source, public_key, 32);
 t.fee = 100;
 t.sequence = sequence + 1;         // read from the node with getLedgerEntries
-t.valid_until = close_time + 120;  // the time comes from the node: no clock needed on board
+t.valid_until = close_time + 120;  // the time comes from the node: no clock needed on the device
 t.has_memo = true;
 t.memo = 4242;                     // your order number
 
@@ -162,7 +163,8 @@ stl_tx_sign(&x, &CRYPTO, seed, public_key, hash);                  //    and sig
 | Guide | Description |
 |---|---|
 | [API reference](docs/api.md) | Every function of the core and of the ESP32 client |
-| [Example: pay and confirm](examples/esp32_pay_and_confirm/src/main.cpp) | A complete program: the board creates its key, pays 1 XLM, waits for the confirmation and finds the payment in the network's events |
+| [Example: pay and confirm](examples/esp32_pay_and_confirm/src/main.cpp) | A complete program: the device creates its key, pays 1 XLM, waits for the confirmation and finds the payment in the network's events |
+| [Example: standalone device](examples/esp32_standalone_device/) | An IoT payment device on one microcontroller, with a screen, a keypad and a relay: it charges with a QR code and waits for the payment, pays, and shows its account and balance |
 | [Referencia de la API](docs/es/api.md) | The API reference, in Spanish |
 
 What is in the repository:
@@ -172,7 +174,7 @@ What is in the repository:
 | `src/` | The core: `stellar_mcu.h` and `stellar_mcu.c` |
 | `platforms/esp32-arduino/` | Stellar RPC client over HTTPS for ESP32 with Arduino |
 | `third_party/monocypher/` | [Monocypher](https://monocypher.org), unmodified |
-| `examples/` | ESP32 example: pay and confirm |
+| `examples/` | ESP32 examples: pay and confirm, and a standalone device |
 | `tests/` | Host tests against the official JavaScript SDK |
 | `docs/` | API reference, in English and in Spanish (`docs/es/`) |
 
@@ -183,7 +185,7 @@ helpers for:
 
 | RPC method | What the SDK gives you |
 |---|---|
-| `getHealth` | Reads the latest ledger and its close time, which sets the expiration of a transaction without a clock on board |
+| `getHealth` | Reads the latest ledger and its close time, which sets the expiration of a transaction without a clock on the device |
 | `getLedgerEntries` | Builds the key of an account (`stl_account_key`) and reads its balance and sequence number (`stl_account_parse`) |
 | `simulateTransaction` | Builds the token contract call to simulate, and builds it again with the data the node returns (`stl_tx_token_call`) |
 | `sendTransaction` | The signed envelope, ready to send in base64 (`stl_tx_envelope`) |
@@ -207,10 +209,10 @@ transactions were accepted on testnet running protocol 30 (November 21, 2026).
 
 | What | How it was verified |
 |---|---|
-| The core builds the same bytes as the official JavaScript SDK | 20 of 20 comparisons equal, on a PC, against `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, contract calls, authorizations, event filters and event parsing, SEP-7 and amounts |
-| A board pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
-| A terminal charges a card and signs by itself | The Paizap terminal made three card charges on testnet with `transfer_from`, built and signed on the board; the last one is [this transaction](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (November 21, 2026) |
-| The example builds | For ESP32-S3 and classic ESP32, with PlatformIO |
+| The core builds the same bytes as the official JavaScript SDK | 23 checks on a PC, all passing. 16 compare byte for byte with `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, `transfer` and `transfer_from` calls, authorizations and event filters. The other 7 cover reading addresses and events, the SEP-7 text and amounts |
+| A microcontroller pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
+| A terminal charges a card and signs by itself | Paizap's demo terminal signed six charges on testnet with `transfer_from`, three of them with a physical card; the last one with a card is [this transaction](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (November 21, 2026) |
+| The examples build | For ESP32-S3 and classic ESP32, with PlatformIO |
 
 Measurements on the ESP32-S3:
 
@@ -240,11 +242,11 @@ and compare each result with what the official JavaScript SDK produces
 **The example, on an ESP32.** With [PlatformIO](https://platformio.org):
 
 1. Set your Wi-Fi network in `examples/esp32_pay_and_confirm/src/main.cpp`.
-2. Flash the board: `pio run -d examples/esp32_pay_and_confirm -e s3 -t upload`
+2. Flash the firmware: `pio run -d examples/esp32_pay_and_confirm -e s3 -t upload`
    (or `-e esp32` for a classic ESP32).
-3. Open the serial monitor. The board prints its account: give it test funds with
+3. Open the serial monitor. The device prints its account: give it test funds with
    `https://friendbot.stellar.org/?addr=<that account>`.
-4. The board pays 1 XLM, waits for the confirmation and prints the link to the transaction.
+4. The device pays 1 XLM, waits for the confirmation and prints the link to the transaction.
 
 ## Why this SDK exists
 
@@ -271,15 +273,20 @@ missing.
 
 From November 23 to December 22, 2026:
 
-1. A usage guide and a second example: a payment notifier.
-2. A second board family, without touching the core.
-3. Detecting a payment by its order number, for charging with a QR code.
-4. Applying to Stellar Instawards.
+| Week | What | Goal |
+|---|---|---|
+| 1 (Nov 23 to 29) | Make the library ready for a third party: a getting-started guide and the two examples | Someone outside the team builds an example and pays on testnet with the guide alone |
+| 2 (Nov 30 to Dec 6) | Bring the same core to a second microcontroller, the RP2040 with its Wi-Fi chip. Start the Stellar Instawards application | The same payment example runs on 2 microcontrollers |
+| 3 (Dec 7 to 13) | A new feature: charging with an order number. The device waits for someone else's payment and recognizes it by its memo | Example published and tested on testnet |
+| 4 (Dec 14 to 22) | Submit the Stellar Instawards application and share the library with Stellar developers | Application submitted; 3 outside developers build it and leave feedback in this repository |
+
+The month costs the hardware for the second microcontroller and the time of the two of us. The
+first thing we check is that someone outside the team can use the library without our help.
 
 ## Feedback and contributing
 
-- [Report a bug or ask for a board](https://github.com/CoKeFish/stellar-mcu-sdk/issues).
-- To add a board, add a folder under `platforms/` with its connection to the node. The core does
+- [Report a bug or ask for a microcontroller](https://github.com/CoKeFish/stellar-mcu-sdk/issues).
+- To add a microcontroller family, add a folder under `platforms/` with its connection to the node. The core does
   not change.
 - Run `sh tests/host/run.sh` before sending a pull request.
 
@@ -290,6 +297,6 @@ in its files.
 
 ## Paizap
 
-Paizap builds devices that charge on Stellar. This SDK is the piece it had to write for its first
-device, a payment terminal for NFC cards, and it publishes it so that anyone can build the next
-one.
+Paizap brings Stellar payments to IoT devices: turnstiles, dispensers, vending machines. It
+maintains this SDK and publishes it so that anyone can build with it. Its demo, a payment terminal
+for NFC cards, runs on this SDK.

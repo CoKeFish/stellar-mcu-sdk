@@ -17,7 +17,7 @@ Convenciones:
 - Nada reserva memoria: cada búfer lo pasas tú, con su capacidad.
 - Las funciones que devuelven un largo devuelven `0` cuando la salida no cabe.
 
-## Lo que aporta la placa
+## Lo que aporta el microcontrolador
 
 ```c
 typedef struct {
