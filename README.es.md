@@ -312,6 +312,10 @@ redes ya tienen el suyo. Esta librería existe para llenar ese hueco.
   útil y que RPC es la API recomendada para acceder a los datos de la red en tiempo real
   ([Stellar Docs](https://developers.stellar.org/docs/data/apis)). Este SDK trabaja sobre
   Stellar RPC.
+- **Por qué Stellar dentro del dispositivo y no un QR bancario.** El QR bancario le sirve a una
+  persona para pagarle a un comercio desde la app de su banco. Con Stellar, el que cobra y paga es
+  el dispositivo: comprueba él mismo el pago en una red abierta, sin banco ni pasarela en el
+  medio, y puede devolverlo o pagarle a otra máquina.
 
 ## Hoja de ruta
 
@@ -320,9 +324,9 @@ Del 23 de noviembre al 22 de diciembre de 2026:
 | Semana | Qué hacemos | Meta |
 |---|---|---|
 | 1 (23 al 29 nov) | Publicar la librería en los registros de Arduino y PlatformIO, con su primera versión numerada | Versión 0.1 instalable desde los dos registros |
-| 2 (30 nov al 6 dic) | Llevar el mismo núcleo a un segundo microcontrolador, el RP2040 con su chip de Wi-Fi. Empezar la postulación a Stellar Instawards, por medio del capítulo local de embajadores | El mismo ejemplo de pago corre en 2 microcontroladores |
-| 3 (7 al 13 dic) | Un ejemplo nuevo: el dispositivo paga en USDC de testnet con una llamada al contrato del token. El núcleo ya arma esa llamada; el ejemplo la corre en el dispositivo, sin servidor | Ejemplo publicado y probado en testnet, con su transacción enlazada |
-| 4 (14 al 22 dic) | Enviar la postulación a Stellar Instawards | Postulación enviada |
+| 2 (30 nov al 6 dic) | Llevar el mismo núcleo a un segundo microcontrolador, el RP2040 con su chip de Wi-Fi | El mismo ejemplo de pago corre en 2 microcontroladores |
+| 3 (7 al 13 dic) | Los estándares de Stellar que faltan: [SEP-29](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md) (comprobar si la cuenta de destino exige memo antes de pagar), las cuentas multiplexadas de [SEP-23](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0023.md) y más funciones de [SEP-41](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md): `balance`, `approve` y `allowance` | Cada estándar, con su comprobación contra el SDK oficial de JavaScript |
+| 4 (14 al 22 dic) | Una funcionalidad nueva: el dispositivo paga en USDC de testnet con una llamada al contrato del token. Enviar la postulación a Stellar Instawards, por medio del capítulo local de embajadores | Ejemplo publicado y probado en testnet, con su transacción enlazada. Postulación enviada |
 
 Dos cosas que estaban en este plan ya están publicadas: la [guía de inicio](https://paizap.vercel.app/sdk/inicio-rapido/) y el
 [ejemplo que cobra con número de pedido](examples/esp32_standalone_device).
