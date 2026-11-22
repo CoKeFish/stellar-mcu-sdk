@@ -122,6 +122,7 @@ Lo justo para leer una respuesta del nodo que ya está en memoria. Buscan `"clav
 | Función | Qué hace |
 |---|---|
 | `size_t stl_sep7_pay(char *out, size_t cap, const uint8_t destination[32], int64_t amount, const stl_asset *a, bool has_memo, uint64_t memo)` | Arma el enlace `web+stellar:pay?...` que abre una billetera, para mostrarlo como QR. `a` es `NULL` para XLM |
+| `size_t stl_sep7_network(char *out, size_t cap, size_t len, const char *passphrase)` | Agrega la red a un pedido armado por `stl_sep7_pay`. SEP-7 la pide en cualquier red que no sea la pública, como testnet. `len` es lo que devolvió `stl_sep7_pay` |
 
 ## Cliente de red para ESP32
 

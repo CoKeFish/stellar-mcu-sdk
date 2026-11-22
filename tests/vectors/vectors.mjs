@@ -155,6 +155,7 @@ const lines = [
   `static const char V_EVENT_INT[] = ${text(eventInt)};`,
   `static const char V_EVENT_MAP[] = ${text(eventMap)};`,
   `static const char V_SEP7[] = ${text(`web+stellar:pay?destination=${B.publicKey()}&amount=2.5&asset_code=USDC&asset_issuer=${USDC_TESTNET}&memo=4242&memo_type=MEMO_ID`)};`,
+  `static const char V_SEP7_NETWORK[] = ${text(`web+stellar:pay?destination=${B.publicKey()}&amount=2.5&asset_code=USDC&asset_issuer=${USDC_TESTNET}&memo=4242&memo_type=MEMO_ID&network_passphrase=${encodeURIComponent(NETWORK)}`)};`,
   '',
 ];
 fs.writeFileSync(OUTPUT, lines.join('\n'));

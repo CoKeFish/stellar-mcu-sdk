@@ -247,9 +247,13 @@ int main(void) {
   ok = stl_event_amount(buf, (size_t)l, &amount, &has_memo, &memo) && amount == 12345678 && has_memo && memo == 4242;
   compare("event_map_with_memo", ok ? "ok" : "bad", "ok");
 
-  // 7. Payment request (SEP-7)
-  stl_sep7_pay(text, sizeof text, V_PUB_B, 25000000, &usdc, true, 4242);
-  compare("sep7", text, V_SEP7);
+  // 7. Payment request (SEP-7): the plain request, and the same one saying which network it is
+  // for. One check for both: if the one with the network is wrong, the comparison fails.
+  size_t sep7_len = stl_sep7_pay(text, sizeof text, V_PUB_B, 25000000, &usdc, true, 4242);
+  char with_network[400];
+  snprintf(with_network, sizeof with_network, "%s", text);
+  sep7_len = stl_sep7_network(with_network, sizeof with_network, sep7_len, "Test SDF Network ; September 2015");
+  compare("sep7", sep7_len && strcmp(with_network, V_SEP7_NETWORK) == 0 ? text : with_network, V_SEP7);
 
   // 8. Amounts: text with 7 decimals <-> smallest units
   int64_t units = 0;

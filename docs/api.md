@@ -119,6 +119,7 @@ Enough to read a node response that is already in memory. They look for `"key":`
 | Function | What it does |
 |---|---|
 | `size_t stl_sep7_pay(char *out, size_t cap, const uint8_t destination[32], int64_t amount, const stl_asset *a, bool has_memo, uint64_t memo)` | Builds the `web+stellar:pay?...` link a wallet can open, to show it as a QR code. `a` is `NULL` for XLM |
+| `size_t stl_sep7_network(char *out, size_t cap, size_t len, const char *passphrase)` | Adds the network to a request built by `stl_sep7_pay`. SEP-7 asks for it on any network other than the public one, such as testnet. `len` is what `stl_sep7_pay` returned |
 
 ## ESP32 network client
 

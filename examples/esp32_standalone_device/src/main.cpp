@@ -364,8 +364,10 @@ static void charge() {
   // does not fit on this screen at a size a phone reads, so the screen shows the account as a QR
   // and the amount and the order number as text.
   uint32_t order = 100000 + esp_random() % 900000;
-  char request[200], order_text[12];
+  char request[280], order_text[12];
   size_t request_len = stl_sep7_pay(request, sizeof request, g_public, units, NULL, true, order);
+  // Off the public network, SEP-7 asks the request to say which network it is for.
+  if (request_len) request_len = stl_sep7_network(request, sizeof request, request_len, NETWORK);
   snprintf(order_text, sizeof order_text, "#%u", (unsigned)order);
   Serial.printf("CHARGE %s XLM to %s order %u from ledger %lld\n", amount, g_account, (unsigned)order,
                 (long long)ledger);

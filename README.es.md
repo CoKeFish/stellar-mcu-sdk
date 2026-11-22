@@ -154,9 +154,11 @@ stl_b64_encode(stl_tx_envelope(&x), stl_tx_envelope_len(&x), b64, sizeof b64);
 stl_asset usdc = {false, "USDC", {0}};
 stl_addr_decode("GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5", STL_ADDR_ACCOUNT, usdc.issuer);
 
-char uri[256];
-stl_sep7_pay(uri, sizeof uri, merchant, 25000000, &usdc, true, 4242);  // 2.5 USDC, pedido 4242
+char uri[320];
+size_t n = stl_sep7_pay(uri, sizeof uri, merchant, 25000000, &usdc, true, 4242);  // 2.5 USDC, pedido 4242
+stl_sep7_network(uri, sizeof uri, n, "Test SDF Network ; September 2015");  // fuera de la red pública, dice cuál es
 // web+stellar:pay?destination=G...&amount=2.5&asset_code=USDC&asset_issuer=G...&memo=4242&memo_type=MEMO_ID
+//   &network_passphrase=Test%20SDF%20Network%20%3B%20September%202015
 ```
 
 ### Confirmar que un pago llegó

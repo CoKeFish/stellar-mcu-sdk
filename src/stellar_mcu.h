@@ -111,6 +111,9 @@ bool stl_json_int(const char *json, const char *key, int64_t *value);
 // ---- Payment request (SEP-7) ----
 size_t stl_sep7_pay(char *out, size_t cap, const uint8_t destination[32], int64_t amount, const stl_asset *a,
                     bool has_memo, uint64_t memo);
+// Adds the network to a request built by stl_sep7_pay. SEP-7 asks for it on any network other than
+// the public one. `len` is what stl_sep7_pay returned. Returns the new length, or 0 if it does not fit.
+size_t stl_sep7_network(char *out, size_t cap, size_t len, const char *passphrase);
 
 #ifdef __cplusplus
 }

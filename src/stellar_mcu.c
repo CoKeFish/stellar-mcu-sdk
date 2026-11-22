@@ -451,3 +451,26 @@ size_t stl_sep7_pay(char *out, size_t cap, const uint8_t destination[32], int64_
   }
   return (size_t)n;
 }
+
+size_t stl_sep7_network(char *out, size_t cap, size_t len, const char *passphrase) {
+  static const char key[] = "&network_passphrase=";
+  static const char hex[] = "0123456789ABCDEF";
+  if (len == 0 || len + sizeof key >= cap) return 0;
+  memcpy(out + len, key, sizeof key - 1);
+  len += sizeof key - 1;
+  for (const char *p = passphrase; *p; p++) {
+    unsigned char c = (unsigned char)*p;
+    bool plain = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' ||
+                 c == '_' || c == '.' || c == '~';
+    if (len + (plain ? 1 : 3) >= cap) return 0;
+    if (plain) {
+      out[len++] = (char)c;
+    } else {
+      out[len++] = '%';
+      out[len++] = hex[c >> 4];
+      out[len++] = hex[c & 15];
+    }
+  }
+  out[len] = 0;
+  return len;
+}
