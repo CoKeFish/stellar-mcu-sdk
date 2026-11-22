@@ -23,6 +23,16 @@ librería para microcontroladores en los registros de Arduino o PlatformIO; Stel
 ninguna. Esta librería existe para llenar ese hueco. Es de código abierto y de libre uso, bajo la
 [licencia Apache 2.0](LICENSE).
 
+**Quién es quién**
+
+- **Stellar MCU SDK** es el producto: una librería abierta para microcontroladores.
+- **Su usuario** es el desarrollador de firmware de un integrador o fabricante de dispositivos IoT
+  que cobran.
+- **[Paizap](https://github.com/CoKeFish/paizap)** es la startup: hace la librería y cobra por
+  integrarla en esos dispositivos.
+- **El terminal con tarjeta** del repositorio de Paizap es una demo hecha con la librería. Quien
+  paga y el comercio son los clientes de nuestro usuario, no los nuestros.
+
 Qué trae:
 
 - lo necesario para armar y firmar transacciones en el aparato: pagos clásicos y llamadas a

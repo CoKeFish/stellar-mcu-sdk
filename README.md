@@ -22,6 +22,15 @@ for microcontrollers in the Arduino or PlatformIO registries; Stellar has none. 
 exists to fill that gap. It is open source and free to use, under the
 [Apache 2.0 license](LICENSE).
 
+**Who is who**
+
+- **Stellar MCU SDK** is the product: an open library for microcontrollers.
+- **Its user** is the firmware developer at an integrator or maker of IoT devices that charge.
+- **[Paizap](https://github.com/CoKeFish/paizap)** is the startup: it builds the library and charges
+  for integrating it into those devices.
+- **The card terminal** in the Paizap repository is a demo built with the library. Whoever pays and
+  the merchant are our user's customers, not ours.
+
 It provides:
 
 - facilities for building and signing transactions on the device: classic payments and calls to
