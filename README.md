@@ -283,14 +283,15 @@ From November 23 to December 22, 2026:
 
 | Week | What | Goal |
 |---|---|---|
-| 1 (Nov 23 to 29) | Make the library ready for a third party: a getting-started guide and the two examples | Someone outside the team builds an example and pays on testnet with the guide alone |
+| 1 (Nov 23 to 29) | A getting-started guide for the library and its two examples | Guide published: with it alone, an example builds and pays on testnet |
 | 2 (Nov 30 to Dec 6) | Bring the same core to a second microcontroller, the RP2040 with its Wi-Fi chip. Start the Stellar Instawards application, through the local ambassador chapter | The same payment example runs on 2 microcontrollers |
 | 3 (Dec 7 to 13) | A new example: charging with an order number. The library already reads that number from the payment; the example waits for someone else's payment and recognizes it by that number | Example published and tested on testnet |
-| 4 (Dec 14 to 22) | Submit the Stellar Instawards application and share the library with Stellar developers | Application submitted; 3 outside developers build it and leave feedback in this repository |
+| 4 (Dec 14 to 22) | Submit the Stellar Instawards application | Application submitted |
 
 The month costs the time of the two of us and the hardware to test the second microcontroller: a
 board with an RP2040 and Wi-Fi costs [$6](https://www.raspberrypi.com/news/raspberry-pi-pico-w-your-6-iot-platform/).
-The first thing we check is that someone outside the team can use the library without our help.
+The customers we look for are integrators and makers of IoT devices that charge: turnstiles,
+water dispensers, vending machines and laundromats.
 What comes next is funded with [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
 awards of up to $15K for early experimentation and prototyping, offered through the Stellar
 ambassador chapters.

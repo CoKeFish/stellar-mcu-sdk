@@ -60,5 +60,3 @@ pantalla o sin el teclado, el ejemplo igual corre desde el monitor serie.
 - **El cobro se reconoce por el número de pedido cuando el pago lo trae.** Un pago con memo
   numérico cuenta solo si el memo es el número de pedido del cobro. Un pago sin memo numérico
   sigue contando por su monto: el primero nuevo de al menos el monto escrito cierra el cobro.
-- **La llave se guarda sin protección.** Para algo más que una demo, hay que activar el guardado
-  cifrado del chip y tener poca plata en la cuenta.

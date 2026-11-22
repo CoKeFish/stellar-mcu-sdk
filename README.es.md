@@ -286,14 +286,15 @@ Del 23 de noviembre al 22 de diciembre de 2026:
 
 | Semana | Qué hacemos | Meta |
 |---|---|---|
-| 1 (23 al 29 nov) | Dejar la librería lista para un tercero: guía de inicio y los dos ejemplos | Una persona ajena al equipo compila un ejemplo y paga en testnet siguiendo solo la guía |
+| 1 (23 al 29 nov) | Guía de inicio de la librería y sus dos ejemplos | Guía publicada: con ella sola se compila un ejemplo y se paga en testnet |
 | 2 (30 nov al 6 dic) | Llevar el mismo núcleo a un segundo microcontrolador, el RP2040 con su chip de Wi-Fi. Empezar la postulación a Stellar Instawards, por medio del capítulo local de embajadores | El mismo ejemplo de pago corre en 2 microcontroladores |
 | 3 (7 al 13 dic) | Un ejemplo nuevo: el cobro con número de pedido. La librería ya lee ese número en el pago; el ejemplo espera el pago de otra persona y lo reconoce por él | Ejemplo publicado y probado en testnet |
-| 4 (14 al 22 dic) | Enviar la postulación a Stellar Instawards y compartir la librería con desarrolladores de Stellar | Postulación enviada; 3 desarrolladores externos la compilan y dejan sus comentarios en este repositorio |
+| 4 (14 al 22 dic) | Enviar la postulación a Stellar Instawards | Postulación enviada |
 
 El mes cuesta el tiempo de los dos y el hardware para probar el segundo microcontrolador: una placa
 con RP2040 y Wi-Fi cuesta [USD 6](https://www.raspberrypi.com/news/raspberry-pi-pico-w-your-6-iot-platform/).
-Lo primero que comprobamos es que alguien ajeno al equipo use la librería sin nuestra ayuda. Lo
+Los clientes que buscamos son integradores y fabricantes de dispositivos IoT que cobran:
+torniquetes, dispensadores de agua, máquinas expendedoras y lavanderías. Lo
 que sigue se financia con [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
 premios de hasta USD 15.000 para experimentar y hacer prototipos, que se piden por medio de los
 capítulos de embajadores de Stellar.

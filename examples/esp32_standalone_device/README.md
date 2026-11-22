@@ -58,5 +58,3 @@ the screen or the keypad the example still runs from the serial monitor.
 - **A charge matches by order number when the payment carries one.** A payment with a numeric
   memo counts only if the memo is the order number of the charge. A payment with no numeric memo
   still counts by its amount: the first new one of at least the amount typed closes the charge.
-- **The key is stored without protection.** For anything beyond a demo, turn on the chip's
-  encrypted storage and keep little money in the account.
