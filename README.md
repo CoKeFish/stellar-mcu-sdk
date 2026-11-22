@@ -1,136 +1,140 @@
 # Stellar MCU SDK
 
-**Pagos de Stellar en cualquier aparato.** Una librería abierta para que un microcontrolador cobre,
-confirme y firme pagos en [Stellar](https://stellar.org), sin un servidor en el medio. Hecha por
+**English** · [Español](README.es.md)
+
+**Stellar payments on any device.** An open library that lets a microcontroller charge, confirm
+and sign payments on [Stellar](https://stellar.org), with no server in the middle. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
 
-> Estado: en desarrollo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
+> Status: in development, on Stellar testnet. See [what has been verified](#what-has-been-verified).
 
-## El problema
+## The problem
 
-Stellar tiene SDK para la web, el celular y los servidores. Falta el del mundo físico.
+Stellar has SDKs for the web, for phones and for servers. The one for the physical world is missing.
 
-- **Hoy un aparato no puede cobrar en Stellar por sí mismo.** La documentación oficial lista SDK
-  para JavaScript, Python, Rust, Java, Go y otros lenguajes de aplicaciones, y ninguno para
-  microcontroladores ([Stellar Docs](https://developers.stellar.org/docs/tools/sdks/client-sdks)).
-- **Quien lo intenta lo escribe a mano o pone una computadora en el medio.** El autor de un
-  dispensador de dulces con ESP8266 cuenta que no conoce ningún SDK de Stellar para Arduino
-  ([stellar-candyman](https://github.com/sui77/stellar-candyman)), y la máquina de dulces de
-  SatoshiPay corre Node.js en una Raspberry Pi
+- **Today a device cannot charge on Stellar by itself.** The official documentation lists SDKs for
+  JavaScript, Python, Rust, Java, Go and other application languages, and none for
+  microcontrollers ([Stellar Docs](https://developers.stellar.org/docs/tools/sdks/client-sdks)).
+- **Whoever tries either writes it by hand or puts a computer in the middle.** The author of an
+  ESP8266 candy dispenser says they do not know of any Stellar SDK for Arduino
+  ([stellar-candyman](https://github.com/sui77/stellar-candyman)), and SatoshiPay's candy machine
+  runs Node.js on a Raspberry Pi
   ([GitHub](https://github.com/satoshipay/stellar-candy-dispenser)).
-- **La librería en C que existe es para billeteras físicas** y su README avisa que lleva tiempo sin
-  actualizarse ([libstellar](https://github.com/overcat/libstellar)).
-- **Lo poco que hay lee Horizon,** que la documentación ya da por cercano al fin de su vida útil
-  ([Stellar Docs](https://developers.stellar.org/docs/data/apis)). Este SDK trabaja sobre
-  Stellar RPC.
+- **The C library that exists is meant for hardware wallets,** and its README warns that it has not
+  been updated in a while ([libstellar](https://github.com/overcat/libstellar)).
+- **The little there is reads Horizon,** which the documentation already describes as close to the
+  end of its life ([Stellar Docs](https://developers.stellar.org/docs/data/apis)). This SDK works
+  on Stellar RPC.
 
-## Qué hace
+## What it does
 
-| Pieza | Qué hace el aparato |
+| Piece | What the device does |
 |---|---|
-| **Cobrar** | Arma el pedido de pago (SEP-7) para mostrarlo como QR |
-| **Confirmar** | Le pregunta a un nodo de Stellar RPC y comprueba él mismo que el pago llegó, con su monto y su número de pedido |
-| **Pagar** | Guarda su llave, arma la transacción, la firma y la envía: un pago clásico o una llamada a un contrato de token (`transfer`, `transfer_from`) |
+| **Charge** | Builds the payment request (SEP-7) to show it as a QR code |
+| **Confirm** | Asks a Stellar RPC node and checks by itself that the payment arrived, with its amount and its order number |
+| **Pay** | Keeps its own key, builds the transaction, signs it and sends it: a classic payment or a call to a token contract (`transfer`, `transfer_from`) |
 
-## Cómo se ve
+## What it looks like
 
-Un pago, de principio a fin, desde la placa:
+A payment, from start to finish, from the board:
 
 ```c
 stl_tx t = {0};
-memcpy(t.origen, publica, 32);
-t.comision = 100;
-t.secuencia = secuencia + 1;            // leída del nodo con getLedgerEntries
-t.valido_hasta = cierre + 120;          // la hora la da el nodo: no hace falta reloj propio
-t.con_memo = true;
-t.memo = 4242;                          // el número de pedido
+memcpy(t.source, public_key, 32);
+t.fee = 100;
+t.sequence = sequence + 1;              // read from the node with getLedgerEntries
+t.valid_until = close_time + 120;       // the time comes from the node: no clock needed on board
+t.has_memo = true;
+t.memo = 4242;                          // the order number
 
 stl_xdr x;
 uint8_t hash[32];
-stl_tx_iniciar(&x, sobre, sizeof sobre, id_red);
-stl_tx_pago(&x, &t, destino, NULL, 10000000);          // 1 XLM
-stl_tx_firmar(&x, &CRIPTO, semilla, publica, hash);    // firma en el aparato
-// ...y el sobre va en base64 a sendTransaction
+stl_tx_begin(&x, envelope, sizeof envelope, network_id);
+stl_tx_payment(&x, &t, destination, NULL, 10000000);   // 1 XLM
+stl_tx_sign(&x, &CRYPTO, seed, public_key, hash);      // signed on the device
+// ...and the envelope goes in base64 to sendTransaction
 ```
 
-El ejemplo completo, con la conexión al nodo y la confirmación del pago, está en
-[`examples/esp32_pagar_y_confirmar`](examples/esp32_pagar_y_confirmar/src/main.cpp).
+The full example, with the connection to the node and the payment confirmation, is in
+[`examples/esp32_pay_and_confirm`](examples/esp32_pay_and_confirm/src/main.cpp). Every function is
+described in the [API reference](docs/api.md).
 
-## Cómo está hecho
+## How it is built
 
-- **Un núcleo en C portable** ([`src/`](src/)), sin memoria dinámica y sin depender de ningún chip:
-  direcciones, montos, base64, XDR, transacciones, llamadas a contratos de token, autorizaciones,
-  lectura de cuentas y de eventos de pago, y pedidos SEP-7.
-- **Un adaptador por placa** ([`platforms/`](platforms/)), que solo aporta la conexión segura al
-  nodo. La placa también aporta el SHA-256 y la firma Ed25519 a través de dos funciones.
-- **Firma con [Monocypher](https://monocypher.org)** ([`third_party/`](third_party/monocypher/)),
-  que ocupa unos 18 KB.
+- **A portable C core** ([`src/`](src/)), with no dynamic memory and no dependency on any chip:
+  addresses, amounts, base64, XDR, transactions, token contract calls, authorizations, reading
+  accounts and payment events, and SEP-7 requests.
+- **One adapter per board** ([`platforms/`](platforms/)), which only provides the secure
+  connection to the node. The board also provides SHA-256 and the Ed25519 signature through two
+  functions.
+- **Signing with [Monocypher](https://monocypher.org)** ([`third_party/`](third_party/monocypher/)),
+  which takes about 18 KB.
 
-| Carpeta | Contenido |
+| Folder | Contents |
 |---|---|
-| `src/` | El núcleo: `nucleo.h` y `nucleo.c` |
-| `platforms/esp32-arduino/` | Cliente del nodo RPC por HTTPS para ESP32 con Arduino |
-| `third_party/monocypher/` | Monocypher, sin cambios |
-| `examples/` | Ejemplo para ESP32: pagar y confirmar |
-| `tests/` | Pruebas en el PC contra el SDK oficial de JavaScript |
+| `src/` | The core: `stellar_mcu.h` and `stellar_mcu.c` |
+| `platforms/esp32-arduino/` | RPC node client over HTTPS for ESP32 with Arduino |
+| `third_party/monocypher/` | Monocypher, unmodified |
+| `examples/` | ESP32 example: pay and confirm |
+| `tests/` | Host tests against the official JavaScript SDK |
+| `docs/` | API reference, in English and in Spanish (`docs/es/`) |
 
-## Qué está comprobado
+## What has been verified
 
-| Qué | Cómo se comprobó |
+| What | How it was verified |
 |---|---|
-| El núcleo arma lo mismo que el SDK oficial de JavaScript, byte a byte | 20 de 20 comparaciones iguales, en el PC, contra `@stellar/stellar-sdk` 17.4.0: direcciones, contratos de token, pagos, llamadas a contratos, autorizaciones, filtros y lectura de eventos, SEP-7 y montos |
-| Una placa paga sola en testnet | Una ESP32-S3 armó, firmó y envió un [pago clásico](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) y una [transferencia en el contrato del token](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), y después los detectó en los eventos de la red (21 de noviembre de 2026) |
-| Un terminal cobra con tarjeta firmando él mismo | El terminal de Paizap hizo tres cobros con tarjeta en testnet con `transfer_from`, armados y firmados en la placa; el último es [esta transacción](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (21 de noviembre de 2026) |
-| El ejemplo compila | Para ESP32-S3 y ESP32 clásico, con PlatformIO |
+| The core builds the same bytes as the official JavaScript SDK | 20 of 20 comparisons equal, on a PC, against `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, contract calls, authorizations, event filters and event parsing, SEP-7 and amounts |
+| A board pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
+| A terminal charges a card and signs by itself | The Paizap terminal made three card charges on testnet with `transfer_from`, built and signed on the board; the last one is [this transaction](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (November 21, 2026) |
+| The example builds | For ESP32-S3 and classic ESP32, with PlatformIO |
 
-Medidas en la ESP32-S3:
+Measurements on the ESP32-S3:
 
-| Qué | Medida |
+| What | Measurement |
 |---|---|
-| Núcleo del SDK | 3,4 KB de flash, sin memoria fija |
-| Firma Ed25519 | 18 KB de flash |
-| Armar y firmar un pago | 7 milisegundos |
-| De enviar un pago a verlo confirmado | 3 a 6 segundos |
-| Una consulta al nodo, con la conexión abierta | 0,3 segundos |
-| Memoria de la conexión segura | 49 KB |
+| SDK core | 3.4 KB of flash, no fixed memory |
+| Ed25519 signature | 18 KB of flash |
+| Building and signing a payment | 7 milliseconds |
+| From sending a payment to seeing it confirmed | 3 to 6 seconds |
+| One node query, with the connection open | 0.3 seconds |
+| Memory of the secure connection | 49 KB |
 
-## Cómo probarlo
+## How to try it
 
-**Las pruebas, en el PC.** Solo hace falta un compilador de C:
+**The tests, on a PC.** All you need is a C compiler:
 
 ```sh
-sh tests/host/correr.sh
+sh tests/host/run.sh
 ```
 
-**El ejemplo, en una ESP32.** Con [PlatformIO](https://platformio.org):
+**The example, on an ESP32.** With [PlatformIO](https://platformio.org):
 
-1. Pon tu red Wi-Fi en `examples/esp32_pagar_y_confirmar/src/main.cpp`.
-2. Graba la placa: `pio run -d examples/esp32_pagar_y_confirmar -e s3 -t upload`
-   (o `-e esp32` para una ESP32 clásica).
-3. Abre el monitor serie. La placa muestra su cuenta: dale fondos de prueba con
-   `https://friendbot.stellar.org/?addr=<esa cuenta>`.
-4. La placa paga 1 XLM, espera la confirmación y muestra el enlace a la transacción.
+1. Set your Wi-Fi network in `examples/esp32_pay_and_confirm/src/main.cpp`.
+2. Flash the board: `pio run -d examples/esp32_pay_and_confirm -e s3 -t upload`
+   (or `-e esp32` for a classic ESP32).
+3. Open the serial monitor. The board prints its account: give it test funds with
+   `https://friendbot.stellar.org/?addr=<that account>`.
+4. The board pays 1 XLM, waits for the confirmation and prints the link to the transaction.
 
-**En tu propio proyecto.** Copia `src/`, el adaptador de tu placa y `third_party/monocypher/`, y
-mira en el ejemplo las dos funciones que tu placa tiene que aportar (`stl_cripto`). Para un pago
-clásico alcanza un búfer de 1 KB; para una llamada a un contrato de token, reserva 2 KB.
+**In your own project.** Copy `src/`, your board's adapter and `third_party/monocypher/`, and look
+in the example for the two functions your board has to provide (`stl_crypto`). A 1 KB buffer is
+enough for a classic payment; for a token contract call, reserve 2 KB.
 
-## Hoja de ruta
+## Roadmap
 
-Del 23 de noviembre al 22 de diciembre de 2026:
+From November 23 to December 22, 2026:
 
-1. Guía de uso y un segundo ejemplo: un avisador de pagos.
-2. Una segunda familia de placas, sin tocar el núcleo.
-3. Detección de un pago por su número de pedido, para el cobro con QR.
-4. Postulación a Stellar Instawards.
+1. A usage guide and a second example: a payment notifier.
+2. A second board family, without touching the core.
+3. Detecting a payment by its order number, for charging with a QR code.
+4. Applying to Stellar Instawards.
 
-## Licencia
+## License
 
-Apache 2.0. Monocypher conserva su propia licencia (BSD de 2 cláusulas o CC0), indicada en sus
-archivos.
+Apache 2.0. Monocypher keeps its own license (2-clause BSD or CC0), stated in its files.
 
 ## Paizap
 
-Paizap construye aparatos que cobran en Stellar. Este SDK es la pieza que tuvo que escribir para
-su primer aparato, un terminal de cobro con tarjeta NFC, y la publica para que el siguiente lo
-pueda construir cualquiera.
+Paizap builds devices that charge on Stellar. This SDK is the piece it had to write for its first
+device, a payment terminal for NFC cards, and it publishes it so that anyone can build the next
+one.

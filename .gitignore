@@ -2,6 +2,6 @@
 *.o
 *.elf
 *.bin
-prueba_vectores
+test_vectors
 node_modules/
 .vscode/

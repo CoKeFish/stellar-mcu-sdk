@@ -1,9 +1,9 @@
-// Certificado raíz con el que el terminal comprueba que habla con el nodo de Stellar.
-// «USERTrust RSA Certification Authority» (vence en 2038): es la raíz de la cadena de
-// soroban-testnet.stellar.org. Otro proveedor de nodo puede necesitar otra raíz.
+// Root certificate the device uses to check that it is talking to the Stellar node.
+// "USERTrust RSA Certification Authority" (expires in 2038): it is the root of the chain of
+// soroban-testnet.stellar.org. Another node provider may need another root.
 #pragma once
 
-static const char RAIZ_NODO_PEM[] =
+static const char STELLAR_RPC_ROOT_CA_PEM[] =
     "-----BEGIN CERTIFICATE-----\n"
     "MIIF3jCCA8agAwIBAgIQAf1tMPyjylGoG7xkDjUDLTANBgkqhkiG9w0BAQwFADCB\n"
     "iDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0pl\n"
