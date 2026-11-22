@@ -49,7 +49,9 @@ Qué se puede construir con esas piezas:
 - **Un aparato que actúa cuando le pagan,** como un torniquete, un dispensador o una máquina
   expendedora: muestra el pedido de pago como QR y confirma el pago en el nodo.
 - **Un terminal de cobro.** El terminal de demostración de Paizap para tarjetas NFC cobra con
-  `transfer_from`, armado y firmado en el aparato.
+  `transfer_from`, armado y firmado en el aparato. Su código está en
+  [`firma.cpp`](https://github.com/CoKeFish/paizap/blob/main/hardware/firmware/src/firma.cpp),
+  en el [repositorio de Paizap](https://github.com/CoKeFish/paizap).
 - **Un avisador de pagos:** una pantalla o un zumbador que anuncia cada pago que recibe una
   cuenta. No guarda ninguna llave.
 
@@ -226,7 +228,7 @@ transacciones entraron en testnet con el protocolo 30 (21 de noviembre de 2026).
 |---|---|
 | El núcleo arma lo mismo que el SDK oficial de JavaScript, byte a byte | 23 comprobaciones en el PC, todas correctas. 16 comparan byte a byte con `@stellar/stellar-sdk` 17.4.0: direcciones, contratos de token, pagos, llamadas `transfer` y `transfer_from`, autorizaciones y filtros de eventos. Las otras 7 cubren la lectura de direcciones y eventos, el texto SEP-7 y los montos |
 | Un microcontrolador paga solo en testnet | Un ESP32-S3 armó, firmó y envió un [pago clásico](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) y una [transferencia en el contrato del token](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), y después los detectó en los eventos de la red (21 de noviembre de 2026) |
-| Un terminal cobra con tarjeta firmando él mismo | El terminal de demostración de Paizap cobra con tarjeta NFC en testnet con `transfer_from`, armado y firmado en el aparato: [esta transacción](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) es uno de esos cobros, y su única firma es la del aparato (22 de noviembre de 2026) |
+| Un terminal cobra con tarjeta firmando él mismo | El [terminal de demostración de Paizap](https://github.com/CoKeFish/paizap) cobra con tarjeta NFC en testnet con `transfer_from`, armado y firmado en el aparato: [esta transacción](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) es uno de esos cobros, y su única firma es la del aparato (22 de noviembre de 2026) |
 | Los ejemplos compilan | Para ESP32-S3 y ESP32 clásico, con PlatformIO |
 
 Medidas en el ESP32-S3:
@@ -319,7 +321,9 @@ CC0), indicada en sus archivos.
 
 Paizap lleva pagos de Stellar a dispositivos IoT: torniquetes, dispensadores, máquinas
 expendedoras. Mantiene este SDK y lo publica para que cualquiera construya con él. Su
-demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK.
+demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK: su firmware, su servidor,
+su app y la [foto del dispositivo](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real) están en el
+[repositorio de Paizap](https://github.com/CoKeFish/paizap).
 
 ### Equipo
 

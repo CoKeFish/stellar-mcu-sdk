@@ -45,7 +45,9 @@ What you can build with those pieces:
 - **A device that acts when it is paid,** such as a turnstile, a dispenser or a vending machine:
   it shows the payment request as a QR code and confirms the payment on the node.
 - **A payment terminal.** Paizap's demo terminal for NFC cards charges with `transfer_from`, built
-  and signed on the device.
+  and signed on the device. Its code is in
+  [`firma.cpp`](https://github.com/CoKeFish/paizap/blob/main/hardware/firmware/src/firma.cpp),
+  in the [Paizap repository](https://github.com/CoKeFish/paizap).
 - **A payment notifier:** a screen or a buzzer that announces each payment an account receives.
   It holds no key.
 
@@ -222,7 +224,7 @@ transactions were accepted on testnet running protocol 30 (November 21, 2026).
 |---|---|
 | The core builds the same bytes as the official JavaScript SDK | 23 checks on a PC, all passing. 16 compare byte for byte with `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, `transfer` and `transfer_from` calls, authorizations and event filters. The other 7 cover reading addresses and events, the SEP-7 text and amounts |
 | A microcontroller pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
-| A terminal charges a card and signs by itself | Paizap's demo terminal charges NFC cards on testnet with `transfer_from`, built and signed on the device: [this transaction](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) is one of those charges, and its only signature is the device's (November 22, 2026) |
+| A terminal charges a card and signs by itself | [Paizap's demo terminal](https://github.com/CoKeFish/paizap) charges NFC cards on testnet with `transfer_from`, built and signed on the device: [this transaction](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) is one of those charges, and its only signature is the device's (November 22, 2026) |
 | The examples build | For ESP32-S3 and classic ESP32, with PlatformIO |
 
 Measurements on the ESP32-S3:
@@ -316,7 +318,9 @@ in its files.
 
 Paizap brings Stellar payments to IoT devices: turnstiles, dispensers, vending machines. It
 maintains this SDK and publishes it so that anyone can build with it. Its demo, a payment terminal
-for NFC cards, runs on this SDK.
+for NFC cards, runs on this SDK: its firmware, its server, its app and a
+[photo of the device](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real) are in the
+[Paizap repository](https://github.com/CoKeFish/paizap).
 
 ### Team
 
