@@ -39,6 +39,9 @@ El código y sus comentarios están en inglés; este README y la
 **Pruébalo:** [demo en vivo](https://paizap.vercel.app/demo/) · [video del dispositivo](https://youtube.com/shorts/vNxY6FoxzuY) · [documentación](https://paizap.vercel.app/sdk/)
 
 > Estado: librería abierta con demo pública en vivo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
+>
+> Es un proyecto nuevo. Pronto sumará nuevas características y, con el tiempo, irá ampliando el
+> número de microcontroladores soportados: mira la [hoja de ruta](#hoja-de-ruta).
 
 ## Qué hace
 

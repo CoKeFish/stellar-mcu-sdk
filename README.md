@@ -35,6 +35,9 @@ It provides:
 **Try it:** [live demo](https://paizap.vercel.app/demo/) · [video of the device](https://youtube.com/shorts/vNxY6FoxzuY) · [documentation](https://paizap.vercel.app/sdk/)
 
 > Status: open library with a public live demo, on Stellar testnet. See [what has been verified](#what-has-been-verified).
+>
+> This is a new project. New features are coming soon, and the number of supported
+> microcontrollers will grow over time: see the [roadmap](#roadmap).
 
 ## What it does
 
