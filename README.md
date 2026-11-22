@@ -305,6 +305,22 @@ What comes next is funded with [Stellar Instawards](https://stellar.org/blog/eco
 awards of up to $15K for early experimentation and prototyping, offered through the Stellar
 ambassador chapters.
 
+## Path to mainnet
+
+Today everything runs on testnet. Moving to mainnet changes three values, not the code:
+
+- **The node.** Use the one of an [RPC provider](https://developers.stellar.org/docs/data/apis/rpc/providers) with mainnet
+  access, with its root certificate in `platforms/esp32-arduino/root_ca.h`.
+- **The network.** The network passphrase goes from `Test SDF Network ; September 2015` to
+  `Public Global Stellar Network ; September 2015` ([Stellar Docs](https://developers.stellar.org/docs/networks)). The
+  identifier that goes into every signature comes from it.
+- **The token.** The core computes the address of the token contract from the network and the
+  asset (`stl_asset_contract`), so the same code works for USDC or another issued asset. It is
+  checked with USDC in the host tests; on the device it was tested with XLM.
+
+The account of the device pays the fee of each charge. On testnet, the transactions linked above
+cost between 100 and 9,110 stroops: less than 0.001 XLM.
+
 ## Feedback and contributing
 
 - [Report a bug or ask for a microcontroller](https://github.com/CoKeFish/stellar-mcu-sdk/issues).
