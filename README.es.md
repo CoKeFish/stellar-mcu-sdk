@@ -325,5 +325,5 @@ demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK.
 
 | Quién | Rol | Qué aporta |
 |---|---|---|
-| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware y Stellar | Ingeniero electrónico. Responsable del diseño electrónico, del firmware y del desarrollo de Stellar MCU SDK |
+| **Rodion Tabares** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware y Stellar | Ingeniero electrónico. Responsable del diseño electrónico, del firmware y del desarrollo de Stellar MCU SDK |
 | **Clyn Roje Quispe Villegas** | Negocio y producto | Responsable del desarrollo de negocio y del enfoque de producto. A cargo de la presentación del proyecto, la identidad de marca y la producción audiovisual |
