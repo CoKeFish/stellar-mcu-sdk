@@ -1,0 +1,7 @@
+.pio/
+*.o
+*.elf
+*.bin
+prueba_vectores
+node_modules/
+.vscode/
