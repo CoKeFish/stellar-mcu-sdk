@@ -22,6 +22,8 @@ It provides:
 - payment requests (SEP-7) to show as a QR code,
 - a network client for Stellar RPC over HTTPS on ESP32.
 
+**Try it:** [live demo](https://paizap.vercel.app/demo/) · [documentation](https://paizap.vercel.app/sdk/)
+
 > Status: in development, on Stellar testnet. See [what has been verified](#what-has-been-verified).
 
 ## What it does
