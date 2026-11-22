@@ -211,7 +211,7 @@ transactions were accepted on testnet running protocol 30 (November 21, 2026).
 |---|---|
 | The core builds the same bytes as the official JavaScript SDK | 23 checks on a PC, all passing. 16 compare byte for byte with `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, `transfer` and `transfer_from` calls, authorizations and event filters. The other 7 cover reading addresses and events, the SEP-7 text and amounts |
 | A microcontroller pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
-| A terminal charges a card and signs by itself | Paizap's demo terminal signed six charges on testnet with `transfer_from`, three of them with a physical card; the last one with a card is [this transaction](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (November 21, 2026) |
+| A terminal charges a card and signs by itself | Paizap's demo terminal signed eight charges on testnet with `transfer_from`, four of them with a physical card; the last one with a card is [this transaction](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) (November 22, 2026) |
 | The examples build | For ESP32-S3 and classic ESP32, with PlatformIO |
 
 Measurements on the ESP32-S3:
@@ -276,12 +276,16 @@ From November 23 to December 22, 2026:
 | Week | What | Goal |
 |---|---|---|
 | 1 (Nov 23 to 29) | Make the library ready for a third party: a getting-started guide and the two examples | Someone outside the team builds an example and pays on testnet with the guide alone |
-| 2 (Nov 30 to Dec 6) | Bring the same core to a second microcontroller, the RP2040 with its Wi-Fi chip. Start the Stellar Instawards application | The same payment example runs on 2 microcontrollers |
-| 3 (Dec 7 to 13) | A new feature: charging with an order number. The device waits for someone else's payment and recognizes it by its memo | Example published and tested on testnet |
+| 2 (Nov 30 to Dec 6) | Bring the same core to a second microcontroller, the RP2040 with its Wi-Fi chip. Start the Stellar Instawards application, through the local ambassador chapter | The same payment example runs on 2 microcontrollers |
+| 3 (Dec 7 to 13) | A new example: charging with an order number. The library already reads that number from the payment; the example waits for someone else's payment and recognizes it by that number | Example published and tested on testnet |
 | 4 (Dec 14 to 22) | Submit the Stellar Instawards application and share the library with Stellar developers | Application submitted; 3 outside developers build it and leave feedback in this repository |
 
-The month costs the hardware for the second microcontroller and the time of the two of us. The
-first thing we check is that someone outside the team can use the library without our help.
+The month costs the time of the two of us and the hardware to test the second microcontroller: a
+board with an RP2040 and Wi-Fi costs [$6](https://www.raspberrypi.com/news/raspberry-pi-pico-w-your-6-iot-platform/).
+The first thing we check is that someone outside the team can use the library without our help.
+What comes next is funded with [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
+awards of up to $15K for early experimentation and prototyping, offered through the Stellar
+ambassador chapters.
 
 ## Feedback and contributing
 
@@ -300,3 +304,10 @@ in its files.
 Paizap brings Stellar payments to IoT devices: turnstiles, dispensers, vending machines. It
 maintains this SDK and publishes it so that anyone can build with it. Its demo, a payment terminal
 for NFC cards, runs on this SDK.
+
+### Team
+
+| Who | Role | What they bring |
+|---|---|---|
+| **Rodion Romanovich** ([@CoKeFish](https://github.com/CoKeFish)) | Hardware and Stellar | Electronics engineering and blockchain integration for microcontrollers |
+| **Clyn Roje Quispe Villegas** | Business and product | Business development and product focus |

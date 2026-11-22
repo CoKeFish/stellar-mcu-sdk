@@ -214,7 +214,7 @@ transacciones entraron en testnet con el protocolo 30 (21 de noviembre de 2026).
 |---|---|
 | El núcleo arma lo mismo que el SDK oficial de JavaScript, byte a byte | 23 comprobaciones en el PC, todas correctas. 16 comparan byte a byte con `@stellar/stellar-sdk` 17.4.0: direcciones, contratos de token, pagos, llamadas `transfer` y `transfer_from`, autorizaciones y filtros de eventos. Las otras 7 cubren la lectura de direcciones y eventos, el texto SEP-7 y los montos |
 | Un microcontrolador paga solo en testnet | Un ESP32-S3 armó, firmó y envió un [pago clásico](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) y una [transferencia en el contrato del token](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), y después los detectó en los eventos de la red (21 de noviembre de 2026) |
-| Un terminal cobra con tarjeta firmando él mismo | El terminal de demostración de Paizap firmó seis cobros en testnet con `transfer_from`, tres de ellos con tarjeta física; el último con tarjeta es [esta transacción](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (21 de noviembre de 2026) |
+| Un terminal cobra con tarjeta firmando él mismo | El terminal de demostración de Paizap firmó ocho cobros en testnet con `transfer_from`, cuatro de ellos con tarjeta física; el último con tarjeta es [esta transacción](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) (22 de noviembre de 2026) |
 | Los ejemplos compilan | Para ESP32-S3 y ESP32 clásico, con PlatformIO |
 
 Medidas en el ESP32-S3:
@@ -278,12 +278,16 @@ Del 23 de noviembre al 22 de diciembre de 2026:
 | Semana | Qué hacemos | Meta |
 |---|---|---|
 | 1 (23 al 29 nov) | Dejar la librería lista para un tercero: guía de inicio y los dos ejemplos | Una persona ajena al equipo compila un ejemplo y paga en testnet siguiendo solo la guía |
-| 2 (30 nov al 6 dic) | Llevar el mismo núcleo a un segundo microcontrolador, el RP2040 con su chip de Wi-Fi. Empezar la postulación a Stellar Instawards | El mismo ejemplo de pago corre en 2 microcontroladores |
-| 3 (7 al 13 dic) | Una característica nueva: el cobro con número de pedido. El aparato espera el pago de otra persona y lo reconoce por su memo | Ejemplo publicado y probado en testnet |
+| 2 (30 nov al 6 dic) | Llevar el mismo núcleo a un segundo microcontrolador, el RP2040 con su chip de Wi-Fi. Empezar la postulación a Stellar Instawards, por medio del capítulo local de embajadores | El mismo ejemplo de pago corre en 2 microcontroladores |
+| 3 (7 al 13 dic) | Un ejemplo nuevo: el cobro con número de pedido. La librería ya lee ese número en el pago; el ejemplo espera el pago de otra persona y lo reconoce por él | Ejemplo publicado y probado en testnet |
 | 4 (14 al 22 dic) | Enviar la postulación a Stellar Instawards y compartir la librería con desarrolladores de Stellar | Postulación enviada; 3 desarrolladores externos la compilan y dejan sus comentarios en este repositorio |
 
-El mes cuesta el hardware para el segundo microcontrolador y el tiempo de los dos. Lo primero que
-comprobamos es que alguien ajeno al equipo use la librería sin nuestra ayuda.
+El mes cuesta el tiempo de los dos y el hardware para probar el segundo microcontrolador: una placa
+con RP2040 y Wi-Fi cuesta [USD 6](https://www.raspberrypi.com/news/raspberry-pi-pico-w-your-6-iot-platform/).
+Lo primero que comprobamos es que alguien ajeno al equipo use la librería sin nuestra ayuda. Lo
+que sigue se financia con [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
+premios de hasta USD 15.000 para experimentar y hacer prototipos, que se piden por medio de los
+capítulos de embajadores de Stellar.
 
 ## Comentarios y aportes
 
@@ -302,3 +306,10 @@ CC0), indicada en sus archivos.
 Paizap lleva pagos de Stellar a dispositivos IoT: torniquetes, dispensadores, máquinas
 expendedoras. Mantiene este SDK y lo publica para que cualquiera construya con él. Su
 demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK.
+
+### Equipo
+
+| Quién | Rol | Qué aporta |
+|---|---|---|
+| **Rodion Romanovich** ([@CoKeFish](https://github.com/CoKeFish)) | Hardware y Stellar | Ingeniería electrónica e integración blockchain para microcontroladores |
+| **Clyn Roje Quispe Villegas** | Negocio y producto | Desarrollo de negocio y enfoque de producto |
