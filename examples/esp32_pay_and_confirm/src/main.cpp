@@ -6,9 +6,9 @@
 //   3. Waits for the network to confirm it.
 //   4. Looks for the payment in the network's events and reads the amount and the order number.
 //
-// To use it: set your Wi-Fi network and a destination account below, flash the board, open the
+// To use it: set your Wi-Fi network and a destination account below, flash the firmware, open the
 // serial monitor and give test funds to the account it prints:
-//   https://friendbot.stellar.org/?addr=<the account the board prints>
+//   https://friendbot.stellar.org/?addr=<the account the device prints>
 #include <Arduino.h>
 #include <Preferences.h>
 #include <WiFi.h>
@@ -31,10 +31,10 @@ static const int64_t AMOUNT = 10000000;     // 1 XLM, in smallest units (7 decim
 static const uint64_t ORDER_NUMBER = 4242;  // travels as the memo and comes back in the event
 static const uint32_t VALIDITY_S = 120;     // the payment enters the network within this window or never
 
-// ---------------------------------------------------------------- what the board provides
-static void board_sha256(const uint8_t *data, size_t n, uint8_t out[32]) { mbedtls_sha256_ret(data, n, out, 0); }
+// ---------------------------------------------------------------- what the microcontroller provides
+static void mcu_sha256(const uint8_t *data, size_t n, uint8_t out[32]) { mbedtls_sha256_ret(data, n, out, 0); }
 
-static void board_sign(const uint8_t seed[32], const uint8_t public_key[32], const uint8_t *message, size_t n,
+static void mcu_sign(const uint8_t seed[32], const uint8_t public_key[32], const uint8_t *message, size_t n,
                        uint8_t signature[64]) {
   uint8_t key[64];  // Monocypher keeps the secret key as seed + public key
   memcpy(key, seed, 32);
@@ -43,14 +43,14 @@ static void board_sign(const uint8_t seed[32], const uint8_t public_key[32], con
   crypto_wipe(key, sizeof key);
 }
 
-static const stl_crypto CRYPTO = {board_sha256, board_sign};
+static const stl_crypto CRYPTO = {mcu_sha256, mcu_sign};
 
 static uint8_t g_seed[32], g_public[32], g_destination[32], g_network_id[32], g_contract[32];
 static uint8_t g_envelope[1200];
 static char g_b64[1700];
 
 // ---------------------------------------------------------------- node queries
-// Latest ledger and its close time: that time sets the validity window, with no clock on board.
+// Latest ledger and its close time: that time sets the validity window, with no clock of its own.
 static bool network_status(int64_t *ledger, int64_t *close_time) {
   return stellar_rpc::call("getHealth", nullptr) && stl_json_int(stellar_rpc::body(), "latestLedger", ledger) &&
          stl_json_int(stellar_rpc::body(), "latestLedgerCloseTime", close_time);
@@ -145,7 +145,7 @@ static void halt(const char *reason) {
 void setup() {
   Serial.begin(115200);
   delay(1500);
-  Serial.println("\nStellar MCU SDK: pay and confirm from the board");
+  Serial.println("\nStellar MCU SDK: pay and confirm from the device");
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -167,11 +167,11 @@ void setup() {
 
   char account[57];
   stl_addr_encode(STL_ADDR_ACCOUNT, g_public, account);
-  Serial.printf("Board account: %s\n", account);
+  Serial.printf("Device account: %s\n", account);
   if (!stl_addr_decode(DESTINATION, STL_ADDR_ACCOUNT, g_destination)) halt("DESTINATION is not a valid account");
 
   // The network and the token contract (XLM): its events are the ones queried when confirming.
-  board_sha256((const uint8_t *)NETWORK, strlen(NETWORK), g_network_id);
+  mcu_sha256((const uint8_t *)NETWORK, strlen(NETWORK), g_network_id);
   stl_asset xlm = {true, "", {0}};
   stl_asset_contract(&CRYPTO, g_network_id, &xlm, g_contract);
 

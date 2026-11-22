@@ -5,3 +5,4 @@
 test_vectors
 node_modules/
 .vscode/
+wifi_secrets.h
