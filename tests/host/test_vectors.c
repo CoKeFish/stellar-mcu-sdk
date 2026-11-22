@@ -196,7 +196,34 @@ int main(void) {
   stl_b64_encode(buf, x.n, g_b64, sizeof g_b64);
   compare("authorization", g_b64, V_AUTH);
 
-  // 5. Node queries and event parsing
+  // 5. Charge with a spending allowance: transfer_from(spender, from, to, amount). The device signs
+  //    and pays the fee; the operation is made on behalf of the spender account, where the
+  //    device's key is a signer. This is what a card terminal sends.
+  uint8_t usdc_contract[32];
+  stl_asset_contract(&CRYPTO, V_NETWORK_ID, &usdc, usdc_contract);
+  const stl_token_call charge = {usdc_contract, "transfer_from", {V_PUB_C, V_PUB_D, V_PUB_B}, 3, 25000000};
+  stl_tx on_behalf = base;
+  on_behalf.fee = 100;
+  on_behalf.has_op_source = true;
+  memcpy(on_behalf.op_source, V_PUB_C, 32);
+  stl_tx_begin(&x, g_tx, sizeof g_tx, V_NETWORK_ID);
+  stl_tx_token_call(&x, &on_behalf, &charge, NULL, 0);
+  stl_tx_unsigned(&x);
+  compare("transfer_from_for_simulation", envelope_b64(&x), V_TX4_SIM);
+
+  on_behalf.fee = V_TX4_FEE;
+  stl_tx_begin(&x, g_tx, sizeof g_tx, V_NETWORK_ID);
+  stl_tx_token_call(&x, &on_behalf, &charge, soroban_data, (size_t)soroban_data_len);
+  stl_tx_sign(&x, &CRYPTO, V_SEED_A, V_PUB_A, h);
+  compare("transfer_from_envelope", envelope_b64(&x), V_TX4_ENVELOPE);
+
+  uint8_t auth[256];  // 224 bytes with three accounts
+  stl_xdr_init(&x, auth, sizeof auth);
+  stl_token_auth(&x, &charge);
+  stl_b64_encode(auth, x.n, g_b64, sizeof g_b64);
+  compare("authorization_transfer_from", x.overflow ? "(overflow)" : g_b64, V_AUTH_CHARGE);
+
+  // 6. Node queries and event parsing
   size_t n = stl_scval_symbol(buf, sizeof buf, "transfer");
   stl_b64_encode(buf, n, g_b64, sizeof g_b64);
   compare("topic_transfer", g_b64, V_TOPIC_TRANSFER);
@@ -217,11 +244,11 @@ int main(void) {
   ok = stl_event_amount(buf, (size_t)l, &amount, &has_memo, &memo) && amount == 12345678 && has_memo && memo == 4242;
   compare("event_map_with_memo", ok ? "ok" : "bad", "ok");
 
-  // 6. Payment request (SEP-7)
+  // 7. Payment request (SEP-7)
   stl_sep7_pay(text, sizeof text, V_PUB_B, 25000000, &usdc, true, 4242);
   compare("sep7", text, V_SEP7);
 
-  // 7. Amounts: text with 7 decimals <-> smallest units
+  // 8. Amounts: text with 7 decimals <-> smallest units
   int64_t units = 0;
   ok = stl_amount_parse("2.5", &units) && units == 25000000;
   compare("amount_parse", ok ? "ok" : "bad", "ok");

@@ -70,6 +70,47 @@ const tx3sim = new TransactionBuilder(account(), { fee: '100', networkPassphrase
   }))
   .build();
 
+// 4. Charge with a spending allowance: transfer_from(spender, from, to, amount). The device (A) is
+// the transaction source: it signs and pays the fee. The operation is made on behalf of the
+// spender account (C), where the device's key is registered as a signer. D is the customer and B
+// the merchant.
+const C = Keypair.fromRawEd25519Seed(Buffer.from(Array.from({ length: 32 }, (_, i) => i + 0x41)));
+const D = Keypair.fromRawEd25519Seed(Buffer.from(Array.from({ length: 32 }, (_, i) => i + 0x61)));
+const usdcContract = new Asset('USDC', USDC_TESTNET).contractId(NETWORK);
+const chargeCall = new xdr.InvokeContractArgs({
+  contractAddress: new Address(usdcContract).toScAddress(),
+  functionName: 'transfer_from',
+  args: [
+    new Address(C.publicKey()).toScVal(),
+    new Address(D.publicKey()).toScVal(),
+    new Address(B.publicKey()).toScVal(),
+    nativeToScVal(25000000n, { type: 'i128' }),
+  ],
+});
+const chargeAuthorization = new xdr.SorobanAuthorizationEntry({
+  credentials: xdr.SorobanCredentials.sorobanCredentialsSourceAccount(),
+  rootInvocation: new xdr.SorobanAuthorizedInvocation({
+    function: xdr.SorobanAuthorizedFunction.sorobanAuthorizedFunctionTypeContractFn(chargeCall),
+    subInvocations: [],
+  }),
+});
+const tx4 = new TransactionBuilder(account(), { fee: '100', networkPassphrase: NETWORK, timebounds })
+  .addOperation(Operation.invokeHostFunction({
+    func: xdr.HostFunction.hostFunctionTypeInvokeContract(chargeCall),
+    auth: [chargeAuthorization],
+    source: C.publicKey(),
+  }))
+  .setSorobanData(sorobanData)
+  .build();
+tx4.sign(A);
+const tx4sim = new TransactionBuilder(account(), { fee: '100', networkPassphrase: NETWORK, timebounds })
+  .addOperation(Operation.invokeHostFunction({
+    func: xdr.HostFunction.hostFunctionTypeInvokeContract(chargeCall),
+    auth: [],
+    source: C.publicKey(),
+  }))
+  .build();
+
 // Event values: the two formats SEP-41 allows for "transfer".
 const eventInt = nativeToScVal(5000000n, { type: 'i128' }).toXDR('base64');
 const eventMap = xdr.ScVal.scvMap([
@@ -102,6 +143,12 @@ const lines = [
   `static const uint32_t V_TX3_FEE = ${tx3.fee};`,
   `static const char V_SOROBAN_DATA[] = ${text(sorobanData.toXDR('base64'))};`,
   `static const char V_AUTH[] = ${text(authorization.toXDR('base64'))};`,
+  `static const uint8_t V_PUB_C[32] = ${bytes(C.rawPublicKey())};`,
+  `static const uint8_t V_PUB_D[32] = ${bytes(D.rawPublicKey())};`,
+  `static const char V_TX4_ENVELOPE[] = ${text(tx4.toEnvelope().toXDR('base64'))};`,
+  `static const char V_TX4_SIM[] = ${text(tx4sim.toEnvelope().toXDR('base64'))};`,
+  `static const uint32_t V_TX4_FEE = ${tx4.fee};`,
+  `static const char V_AUTH_CHARGE[] = ${text(chargeAuthorization.toXDR('base64'))};`,
   `static const char V_TOPIC_TRANSFER[] = ${text(xdr.ScVal.scvSymbol('transfer').toXDR('base64'))};`,
   `static const char V_TOPIC_ACCOUNT_B[] = ${text(new Address(B.publicKey()).toScVal().toXDR('base64'))};`,
   `static const char V_ACCOUNT_KEY_A[] = ${text(xdr.LedgerKey.account(new xdr.LedgerKeyAccount({ accountId: A.xdrAccountId() })).toXDR('base64'))};`,
