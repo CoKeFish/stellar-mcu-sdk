@@ -147,7 +147,8 @@ static void activo(stl_xdr *x, const stl_activo *a) {
     return;
   }
   uint8_t codigo[12] = {0};
-  size_t largo = strnlen(a->codigo, 12);
+  size_t largo = 0;  // largo del código, hasta 12 letras (sin strnlen, que no es de C99)
+  while (largo < 12 && a->codigo[largo]) largo++;
   memcpy(codigo, a->codigo, largo);
   if (largo <= 4) {
     u32(x, 1);  // ASSET_TYPE_CREDIT_ALPHANUM4

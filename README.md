@@ -80,6 +80,7 @@ El ejemplo completo, con la conexión al nodo y la confirmación del pago, está
 |---|---|
 | El núcleo arma lo mismo que el SDK oficial de JavaScript, byte a byte | 20 de 20 comparaciones iguales, en el PC, contra `@stellar/stellar-sdk` 17.4.0: direcciones, contratos de token, pagos, llamadas a contratos, autorizaciones, filtros y lectura de eventos, SEP-7 y montos |
 | Una placa paga sola en testnet | Una ESP32-S3 armó, firmó y envió un [pago clásico](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) y una [transferencia en el contrato del token](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), y después los detectó en los eventos de la red (21 de noviembre de 2026) |
+| Un terminal cobra con tarjeta firmando él mismo | El terminal de Paizap hizo tres cobros con tarjeta en testnet con `transfer_from`, armados y firmados en la placa; el último es [esta transacción](https://stellar.expert/explorer/testnet/tx/6f2127ebd08855e3b83446a301e966da843d5f2ae21cae5bb7edba8dffcd3f46) (21 de noviembre de 2026) |
 | El ejemplo compila | Para ESP32-S3 y ESP32 clásico, con PlatformIO |
 
 Medidas en la ESP32-S3:
@@ -111,16 +112,16 @@ sh tests/host/correr.sh
 4. La placa paga 1 XLM, espera la confirmación y muestra el enlace a la transacción.
 
 **En tu propio proyecto.** Copia `src/`, el adaptador de tu placa y `third_party/monocypher/`, y
-mira en el ejemplo las dos funciones que tu placa tiene que aportar (`stl_cripto`).
+mira en el ejemplo las dos funciones que tu placa tiene que aportar (`stl_cripto`). Para un pago
+clásico alcanza un búfer de 1 KB; para una llamada a un contrato de token, reserva 2 KB.
 
 ## Hoja de ruta
 
 Del 23 de noviembre al 22 de diciembre de 2026:
 
 1. Guía de uso y un segundo ejemplo: un avisador de pagos.
-2. Que el terminal de Paizap firme sus cobros con el SDK.
-3. Una segunda familia de placas, sin tocar el núcleo, y detección de un pago por su número de
-   pedido para el cobro con QR.
+2. Una segunda familia de placas, sin tocar el núcleo.
+3. Detección de un pago por su número de pedido, para el cobro con QR.
 4. Postulación a Stellar Instawards.
 
 ## Licencia
