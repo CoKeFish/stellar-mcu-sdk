@@ -12,7 +12,7 @@ dispenser, start a washing machine. The keypad and the screen are only there to 
 
 | Key | Action | What the SDK does |
 |---|---|---|
-| `A` | **Charge.** Type an amount and `#`. The screen shows a QR with the device's account. When the payment arrives, the device beeps, lights the LED and pulses the relay | Watches the token contract's events with `getEvents` and reads the amount |
+| `A` | **Charge.** Type an amount and `#`. The device gives the charge an order number. The screen shows a QR with the device's account, the amount and the order number, and the full payment request goes out on the serial monitor. When the payment arrives, the device beeps, lights the LED and pulses the relay | Builds the payment request (SEP-7) with `stl_sep7_pay`, watches the token contract's events with `getEvents` and reads the amount and the order number of each payment |
 | `B` | **Pay.** Type an amount and `#`. The device sends that amount to whoever paid it last (a refund) or to `PAY_TO` | Builds the payment, signs it with the device's key, sends it and waits for the network |
 | `C` | **Account.** Shows the device's account as a QR and its balance | Reads the account from the node |
 
@@ -44,14 +44,19 @@ the screen or the keypad the example still runs from the serial monitor.
 2. Flash the firmware: `pio run -d examples/esp32_standalone_device -e s3 -t upload`
    (`-e esp32` for a classic ESP32).
 3. Wait for the home screen with the balance. Press `A`, type an amount and `#`, and pay that
-   amount in XLM to the account in the QR from any testnet wallet.
+   amount in XLM to the account in the QR from any testnet wallet. To tie the payment to the
+   charge, put the order number the screen shows (`#123456`) as a numeric memo (memo ID).
 
 ## Limits of this example
 
 - **Testnet and XLM only.** Another asset needs its token contract and, for the payer, a trustline.
-- **The QR is the bare account.** A full payment request (SEP-7) does not fit on a 128×64 screen
-  at a size a phone can read, so the payer types the amount.
-- **A charge matches by amount.** The first new payment of at least the amount typed closes the
-  charge. With several customers at once, give each charge an order number (a memo) instead.
+- **The QR is the bare account.** The device builds the full payment request (SEP-7), with the
+  account, the amount and the order number, and prints it on the serial monitor as
+  `REQUEST web+stellar:pay?...`. As a QR that request does not fit on a 128×64 screen at a size a
+  phone can read, so the screen shows the account as a QR and the payer types the amount and the
+  order number. A bigger screen can show the request itself.
+- **A charge matches by order number when the payment carries one.** A payment with a numeric
+  memo counts only if the memo is the order number of the charge. A payment with no numeric memo
+  still counts by its amount: the first new one of at least the amount typed closes the charge.
 - **The key is stored without protection.** For anything beyond a demo, turn on the chip's
   encrypted storage and keep little money in the account.

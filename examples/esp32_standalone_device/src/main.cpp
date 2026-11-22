@@ -2,8 +2,10 @@
 // charges, sees the payment arrive and pays, talking straight to a Stellar RPC node.
 // There is no server of your own, no app and no card: only the microcontroller and the SDK.
 //
-//   A  Charge   type an amount, the screen shows a QR with the device's account; when the payment
-//               arrives the device beeps, lights the LED and pulses the relay
+//   A  Charge   type an amount; the device gives the charge an order number, builds the payment
+//               request (SEP-7) and prints it on the serial monitor, and the screen shows a QR with
+//               the device's account, the amount and the order number. When the payment arrives
+//               the device beeps, lights the LED and pulses the relay
 //   B  Pay      type an amount, the device signs and sends a payment (a refund to whoever paid it
 //               last, or to PAY_TO)
 //   C  Account  the device's account as a QR, and its balance
@@ -214,11 +216,13 @@ static bool fund_on_testnet() {
 struct Incoming {
   int64_t amount;
   char tx[65];
+  bool by_order;  // the payment carried this charge's order number
 };
 
 // Looks in the XLM contract's events for a "transfer" to the device of at least `min_amount`, newer
-// than the ones already counted. Remembers who paid.
-static bool find_incoming(int64_t from_ledger, int64_t min_amount, Incoming *in) {
+// than the ones already counted. A payment that carries an order number (a numeric memo) counts
+// only if it is `order`; one with no order number counts by its amount. Remembers who paid.
+static bool find_incoming(int64_t from_ledger, int64_t min_amount, uint64_t order, Incoming *in) {
   char contract_text[57], topic_transfer[32], topic_me[72];
   uint8_t buf[64];
   stl_addr_encode(STL_ADDR_CONTRACT, g_contract, contract_text);
@@ -256,10 +260,15 @@ static bool find_incoming(int64_t from_ledger, int64_t min_amount, Incoming *in)
     field = stl_json_string(event, "value", &n);
     int bytes = field ? stl_b64_decode(field, n, raw, sizeof raw) : -1;
     if (bytes <= 0 || !stl_event_amount(raw, (size_t)bytes, &in->amount, &has_memo, &memo)) continue;
+    if (has_memo && memo != order) {
+      Serial.printf("A payment for order %llu arrived: it is not this charge\n", (unsigned long long)memo);
+      continue;
+    }
     if (in->amount < min_amount) {
       Serial.println("A payment smaller than the charge arrived: it does not count");
       continue;
     }
+    in->by_order = has_memo;
     field = stl_json_string(event, "txHash", &n);
     snprintf(in->tx, sizeof in->tx, "%.*s", field ? (int)n : 0, field ? field : "");
 
@@ -350,8 +359,18 @@ static void charge() {
     delay(2500);
     return;
   }
-  Serial.printf("CHARGE %s XLM to %s from ledger %lld\n", amount, g_account, (long long)ledger);
-  show_qr(g_account, "Pay", amount, "XLM");
+  // The charge gets an order number, and the SDK builds the payment request (SEP-7) that carries
+  // the account, the amount and that number. The request goes out on the serial monitor: as a QR it
+  // does not fit on this screen at a size a phone reads, so the screen shows the account as a QR
+  // and the amount and the order number as text.
+  uint32_t order = 100000 + esp_random() % 900000;
+  char request[200], order_text[12];
+  size_t request_len = stl_sep7_pay(request, sizeof request, g_public, units, NULL, true, order);
+  snprintf(order_text, sizeof order_text, "#%u", (unsigned)order);
+  Serial.printf("CHARGE %s XLM to %s order %u from ledger %lld\n", amount, g_account, (unsigned)order,
+                (long long)ledger);
+  if (request_len) Serial.printf("REQUEST %s\n", request);
+  show_qr(g_account, "Pay XLM", amount, order_text);
 
   uint32_t start = millis(), last_query = 0;
   while (millis() - start < CHARGE_WAIT_MS) {
@@ -365,13 +384,15 @@ static void charge() {
       continue;
     }
     Incoming in;
-    bool found = find_incoming(ledger, units, &in);
+    bool found = find_incoming(ledger, units, order, &in);
     last_query = millis();
     if (!found) continue;
 
     char paid[16], line[24];
     stl_amount_format(in.amount, paid, sizeof paid);
-    Serial.printf("PAID %s XLM tx %s after %u ms\n", paid, in.tx, (unsigned)(millis() - start));
+    Serial.printf("PAID %s XLM tx %s %s after %u ms\n", paid, in.tx,
+                  in.by_order ? "matched by order number" : "no order number, matched by amount",
+                  (unsigned)(millis() - start));
     snprintf(line, sizeof line, "tx %.16s", in.tx);
     show("Paid", paid, line);
     signal_paid();

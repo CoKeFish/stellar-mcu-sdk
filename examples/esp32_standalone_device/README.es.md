@@ -12,7 +12,7 @@ a mano.
 
 | Tecla | Acción | Qué hace el SDK |
 |---|---|---|
-| `A` | **Cobrar.** Escribe un monto y `#`. La pantalla muestra un QR con la cuenta del aparato. Cuando llega el pago, el aparato pita, enciende el LED y activa el relé | Vigila los eventos del contrato del token con `getEvents` y lee el monto |
+| `A` | **Cobrar.** Escribe un monto y `#`. El aparato le da al cobro un número de pedido. La pantalla muestra un QR con la cuenta del aparato, el monto y el número de pedido, y el pedido de pago completo sale por el monitor serie. Cuando llega el pago, el aparato pita, enciende el LED y activa el relé | Arma el pedido de pago (SEP-7) con `stl_sep7_pay`, vigila los eventos del contrato del token con `getEvents` y lee el monto y el número de pedido de cada pago |
 | `B` | **Pagar.** Escribe un monto y `#`. El aparato manda ese monto a quien le pagó por última vez (una devolución) o a `PAY_TO` | Arma el pago, lo firma con la llave del aparato, lo envía y espera a la red |
 | `C` | **Cuenta.** Muestra la cuenta del aparato como QR y su saldo | Lee la cuenta en el nodo |
 
@@ -44,15 +44,21 @@ pantalla o sin el teclado, el ejemplo igual corre desde el monitor serie.
 2. Graba el firmware: `pio run -d examples/esp32_standalone_device -e s3 -t upload`
    (`-e esp32` para un ESP32 clásico).
 3. Espera la pantalla de inicio con el saldo. Aprieta `A`, escribe un monto y `#`, y paga ese
-   monto en XLM a la cuenta del QR desde cualquier billetera de testnet.
+   monto en XLM a la cuenta del QR desde cualquier billetera de testnet. Para atar el pago al
+   cobro, pon como memo numérico (memo ID) el número de pedido que muestra la pantalla
+   (`#123456`).
 
 ## Límites de este ejemplo
 
 - **Solo testnet y XLM.** Otro activo necesita su contrato de token y, para quien paga, una línea
   de confianza.
-- **El QR es la cuenta sola.** Un pedido de pago completo (SEP-7) no cabe en una pantalla de
-  128×64 a un tamaño que un celular lea, así que quien paga escribe el monto.
-- **El cobro se reconoce por el monto.** El primer pago nuevo de al menos el monto escrito cierra
-  el cobro. Con varios clientes a la vez, conviene dar a cada cobro un número de pedido (un memo).
+- **El QR es la cuenta sola.** El aparato arma el pedido de pago completo (SEP-7), con la cuenta,
+  el monto y el número de pedido, y lo imprime por el monitor serie como
+  `REQUEST web+stellar:pay?...`. Como QR ese pedido no cabe en una pantalla de 128×64 a un tamaño
+  que un celular lea, así que la pantalla muestra la cuenta como QR y quien paga escribe el monto
+  y el número de pedido. Una pantalla más grande puede mostrar el pedido mismo.
+- **El cobro se reconoce por el número de pedido cuando el pago lo trae.** Un pago con memo
+  numérico cuenta solo si el memo es el número de pedido del cobro. Un pago sin memo numérico
+  sigue contando por su monto: el primero nuevo de al menos el monto escrito cierra el cobro.
 - **La llave se guarda sin protección.** Para algo más que una demo, hay que activar el guardado
   cifrado del chip y tener poca plata en la cuenta.
