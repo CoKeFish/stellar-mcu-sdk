@@ -4,15 +4,15 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 ![Language](https://img.shields.io/badge/language-C99-blue)
-![Core](https://img.shields.io/badge/core-portable%20C99%2C%20any%20microcontroller-blue)
-![First adapter](https://img.shields.io/badge/first%20adapter-ESP32-blue)
+![Library for microcontrollers](https://img.shields.io/badge/library%20for-microcontrollers-blue)
+![First microcontroller](https://img.shields.io/badge/first%20microcontroller-ESP32-blue)
 ![Network](https://img.shields.io/badge/Stellar-testnet-blue)
 
 **Stellar payments on IoT devices.** `stellar-mcu-sdk` is a C library for microcontrollers, designed to
 bring payment systems to IoT devices such as turnstiles, dispensers and vending machines. It talks
 to [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) and builds and signs
-transactions on the device itself, with no server of your own in between. It is not tied to
-any chip: the core is portable C99, and the ESP32 is only the first microcontroller with an adapter. Built by
+transactions on the device itself, with no server of your own in between. It is a library for
+microcontrollers, not for one chip: the core is portable C99, and the ESP32 is the first. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
 
 It provides:
@@ -47,8 +47,8 @@ What you can build with those pieces:
 
 ## Supported microcontrollers
 
-The library is for microcontrollers in general. The core depends on no chip; each family adds a
-small adapter. The ESP32 family is the first one:
+This is a library for microcontrollers. The core depends on no chip. The ESP32 family is the
+first one:
 
 | Microcontroller | Framework | Status | SHA-256 | Ed25519 |
 |---|---|---|---|---|
@@ -56,8 +56,8 @@ small adapter. The ESP32 family is the first one:
 | ESP32 (classic) | Arduino, with PlatformIO | Builds | mbedTLS, included in the ESP32 Arduino core | Monocypher 4.0.2 |
 
 The core ([`src/`](src/)) is portable C99: it allocates no memory and includes nothing from any
-chip. A new microcontroller family only needs an adapter in [`platforms/`](platforms/) with the secure connection
-to the node, plus two functions: SHA-256 and the Ed25519 signature.
+chip. A new microcontroller family only needs its own folder in [`platforms/`](platforms/) with the secure
+connection to the node, plus two functions: SHA-256 and the Ed25519 signature.
 
 ## Installation
 
@@ -88,7 +88,7 @@ Then include it:
 #include "stellar_rpc.h"   // the ESP32 client for Stellar RPC
 ```
 
-With another build system, compile `src/stellar_mcu.c`, your microcontroller's adapter and the two
+With another build system, compile `src/stellar_mcu.c`, the files for your microcontroller and the two
 Monocypher files, and add those three folders to the include path.
 
 ## Quick examples

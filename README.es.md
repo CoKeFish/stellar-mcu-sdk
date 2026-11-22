@@ -4,15 +4,15 @@
 
 [![Licencia](https://img.shields.io/badge/licencia-Apache%202.0-blue)](LICENSE)
 ![Lenguaje](https://img.shields.io/badge/lenguaje-C99-blue)
-![Núcleo](https://img.shields.io/badge/n%C3%BAcleo-C99%20portable%2C%20cualquier%20microcontrolador-blue)
-![Primer adaptador](https://img.shields.io/badge/primer%20adaptador-ESP32-blue)
+![Librería para microcontroladores](https://img.shields.io/badge/librer%C3%ADa%20para-microcontroladores-blue)
+![Primer microcontrolador](https://img.shields.io/badge/primer%20microcontrolador-ESP32-blue)
 ![Red](https://img.shields.io/badge/Stellar-testnet-blue)
 
 **Pagos de Stellar en dispositivos IoT.** `stellar-mcu-sdk` es una librería en C para
 microcontroladores, diseñada para llevar sistemas de pago a dispositivos IoT como torniquetes,
 dispensadores y máquinas expendedoras. Habla con [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) y
-arma y firma las transacciones en el propio aparato, sin un servidor tuyo en el medio. No está atada a
-ningún chip: el núcleo es C99 portable, y el ESP32 es solo el primer microcontrolador con adaptador.
+arma y firma las transacciones en el propio aparato, sin un servidor tuyo en el medio. Es una librería para
+microcontroladores, no para un chip: el núcleo es C99 portable, y el ESP32 es el primero.
 Desarrollada por
 [Paizap](https://github.com/CoKeFish/paizap).
 
@@ -51,8 +51,8 @@ Qué se puede construir con esas piezas:
 
 ## Microcontroladores
 
-La librería es para microcontroladores en general. El núcleo no depende de ningún chip; cada
-familia suma un adaptador pequeño. La familia ESP32 es la primera:
+Es una librería para microcontroladores. El núcleo no depende de ningún chip. La familia ESP32
+es la primera:
 
 | Microcontrolador | Entorno | Estado | SHA-256 | Ed25519 |
 |---|---|---|---|---|
@@ -60,8 +60,8 @@ familia suma un adaptador pequeño. La familia ESP32 es la primera:
 | ESP32 (clásico) | Arduino, con PlatformIO | Compila | mbedTLS, incluida en el núcleo de Arduino para ESP32 | Monocypher 4.0.2 |
 
 El núcleo ([`src/`](src/)) es C99 portable: no reserva memoria y no incluye nada de ningún chip.
-Una familia nueva de microcontroladores solo necesita un adaptador en [`platforms/`](platforms/) con la conexión segura al
-nodo, más dos funciones: el SHA-256 y la firma Ed25519.
+Una familia nueva de microcontroladores solo necesita su carpeta en [`platforms/`](platforms/) con la conexión
+segura al nodo, más dos funciones: el SHA-256 y la firma Ed25519.
 
 ## Instalación
 
@@ -92,7 +92,7 @@ Después inclúyelo:
 #include "stellar_rpc.h"   // el cliente de Stellar RPC para ESP32
 ```
 
-Con otro sistema de compilación, compila `src/stellar_mcu.c`, el adaptador de tu microcontrolador y los dos
+Con otro sistema de compilación, compila `src/stellar_mcu.c`, los archivos de tu microcontrolador y los dos
 archivos de Monocypher, y agrega esas tres carpetas a la ruta de inclusión.
 
 ## Ejemplos rápidos
