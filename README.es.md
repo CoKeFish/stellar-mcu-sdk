@@ -4,13 +4,16 @@
 
 [![Licencia](https://img.shields.io/badge/licencia-Apache%202.0-blue)](LICENSE)
 ![Lenguaje](https://img.shields.io/badge/lenguaje-C99-blue)
-![Microcontroladores](https://img.shields.io/badge/microcontroladores-ESP32%20%7C%20ESP32--S3-blue)
+![Núcleo](https://img.shields.io/badge/n%C3%BAcleo-C99%20portable%2C%20cualquier%20microcontrolador-blue)
+![Primer adaptador](https://img.shields.io/badge/primer%20adaptador-ESP32-blue)
 ![Red](https://img.shields.io/badge/Stellar-testnet-blue)
 
 **Pagos de Stellar en dispositivos IoT.** `stellar-mcu-sdk` es una librería en C para
-microcontroladores, hecha para llevar sistemas de pago a dispositivos IoT como torniquetes,
+microcontroladores, diseñada para llevar sistemas de pago a dispositivos IoT como torniquetes,
 dispensadores y máquinas expendedoras. Habla con [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) y
-arma y firma las transacciones en el propio aparato, sin un servidor tuyo en el medio. Hecha por
+arma y firma las transacciones en el propio aparato, sin un servidor tuyo en el medio. No está atada a
+ningún chip: el núcleo es C99 portable, y el ESP32 es solo el primer microcontrolador con adaptador.
+Desarrollada por
 [Paizap](https://github.com/CoKeFish/paizap).
 
 Qué trae:
@@ -20,7 +23,7 @@ Qué trae:
 - lo que un aparato necesita para consultar un nodo de Stellar RPC y leer la respuesta: cuentas,
   estado de una transacción y eventos de pago,
 - pedidos de pago (SEP-7) para mostrar como QR,
-- un cliente de red para Stellar RPC por HTTPS en ESP32.
+- un cliente de red para Stellar RPC por HTTPS para el primer microcontrolador soportado, el ESP32.
 
 El código y sus comentarios están en inglés; este README y la
 [referencia de la API](docs/es/api.md) están también en español.
@@ -47,6 +50,9 @@ Qué se puede construir con esas piezas:
   cuenta. No guarda ninguna llave.
 
 ## Microcontroladores
+
+La librería es para microcontroladores en general. El núcleo no depende de ningún chip; cada
+familia suma un adaptador pequeño. La familia ESP32 es la primera:
 
 | Microcontrolador | Entorno | Estado | SHA-256 | Ed25519 |
 |---|---|---|---|---|

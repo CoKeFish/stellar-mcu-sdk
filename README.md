@@ -4,13 +4,15 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 ![Language](https://img.shields.io/badge/language-C99-blue)
-![Microcontrollers](https://img.shields.io/badge/microcontrollers-ESP32%20%7C%20ESP32--S3-blue)
+![Core](https://img.shields.io/badge/core-portable%20C99%2C%20any%20microcontroller-blue)
+![First adapter](https://img.shields.io/badge/first%20adapter-ESP32-blue)
 ![Network](https://img.shields.io/badge/Stellar-testnet-blue)
 
-**Stellar payments on IoT devices.** `stellar-mcu-sdk` is a C library for microcontrollers, made to
+**Stellar payments on IoT devices.** `stellar-mcu-sdk` is a C library for microcontrollers, designed to
 bring payment systems to IoT devices such as turnstiles, dispensers and vending machines. It talks
 to [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) and builds and signs
-transactions on the device itself, with no server of your own in between. Built by
+transactions on the device itself, with no server of your own in between. It is not tied to
+any chip: the core is portable C99, and the ESP32 is only the first microcontroller with an adapter. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
 
 It provides:
@@ -20,7 +22,7 @@ It provides:
 - what a device needs to query a Stellar RPC node and read the answer: accounts, transaction
   status and payment events,
 - payment requests (SEP-7) to show as a QR code,
-- a network client for Stellar RPC over HTTPS on ESP32.
+- a network client for Stellar RPC over HTTPS for the first supported microcontroller, the ESP32.
 
 **Try it:** [live demo](https://paizap.vercel.app/demo/) · [documentation](https://paizap.vercel.app/sdk/)
 
@@ -44,6 +46,9 @@ What you can build with those pieces:
   It holds no key.
 
 ## Supported microcontrollers
+
+The library is for microcontrollers in general. The core depends on no chip; each family adds a
+small adapter. The ESP32 family is the first one:
 
 | Microcontroller | Framework | Status | SHA-256 | Ed25519 |
 |---|---|---|---|---|
