@@ -10,6 +10,11 @@
 #ifndef STELLAR_RPC_HOST
 #define STELLAR_RPC_HOST "soroban-testnet.stellar.org"
 #endif
+// Path of the node inside that host. A provider whose address carries a path or a key needs
+// it, for example -DSTELLAR_RPC_PATH=\"/my-key\".
+#ifndef STELLAR_RPC_PATH
+#define STELLAR_RPC_PATH "/"
+#endif
 
 namespace {
 
@@ -87,9 +92,13 @@ int post(const char *json, size_t n) {
     responseTruncated = false;
     char headers[224];
     int nh = snprintf(headers, sizeof headers,
-                      "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\n"
+                      "POST %s HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\n"
                       "Content-Length: %u\r\nConnection: keep-alive\r\n\r\n",
-                      STELLAR_RPC_HOST, (unsigned)n);
+                      STELLAR_RPC_PATH, STELLAR_RPC_HOST, (unsigned)n);
+    if (nh < 0 || (size_t)nh >= sizeof headers) {
+      Serial.println("Node: host and path are too long for the request");
+      return 0;
+    }
     tls.write((const uint8_t *)headers, (size_t)nh);
     tls.write((const uint8_t *)json, n);
 

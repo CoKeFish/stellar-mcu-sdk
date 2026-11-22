@@ -135,4 +135,5 @@ between requests.
 | `void stellar_rpc::close()` | Closes the connection and frees its memory |
 
 The node is `soroban-testnet.stellar.org` by default. To use another one, define
-`STELLAR_RPC_HOST` at build time; another node may need another root certificate in `root_ca.h`.
+`STELLAR_RPC_HOST` at build time, and `STELLAR_RPC_PATH` if its address has a path; another node
+may need another root certificate in `root_ca.h`.

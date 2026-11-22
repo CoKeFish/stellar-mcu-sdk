@@ -138,4 +138,5 @@ consultas.
 | `void stellar_rpc::close()` | Cierra la conexión y libera su memoria |
 
 El nodo por defecto es `soroban-testnet.stellar.org`. Para usar otro, define `STELLAR_RPC_HOST` al
-compilar; otro nodo puede necesitar otro certificado raíz en `root_ca.h`.
+compilar, y `STELLAR_RPC_PATH` si su dirección lleva una ruta; otro nodo puede necesitar otro
+certificado raíz en `root_ca.h`.
