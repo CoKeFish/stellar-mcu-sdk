@@ -15,6 +15,10 @@ transactions on the device itself, with no server of your own in between. It is 
 microcontrollers, not for one chip: the core is portable C99, and the ESP32 is the first. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
 
+**Stellar has no SDK for microcontrollers.** The [official list](https://developers.stellar.org/docs/tools/sdks/client-sdks) has client SDKs for
+JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go and C# .NET, and none
+for microcontrollers. This library is that missing piece.
+
 It provides:
 
 - facilities for building and signing transactions on the device: classic payments and calls to

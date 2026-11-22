@@ -16,6 +16,10 @@ microcontroladores, no para un chip: el núcleo es C99 portable, y el ESP32 es e
 Desarrollada por
 [Paizap](https://github.com/CoKeFish/paizap).
 
+**Stellar no tiene un SDK para microcontroladores.** La [lista oficial](https://developers.stellar.org/docs/tools/sdks/client-sdks) trae SDK de
+cliente para JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go y C# .NET,
+y ninguno para microcontroladores. Esta librería es esa pieza que falta.
+
 Qué trae:
 
 - lo necesario para armar y firmar transacciones en el aparato: pagos clásicos y llamadas a
