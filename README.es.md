@@ -216,7 +216,7 @@ transacciones entraron en testnet con el protocolo 30 (21 de noviembre de 2026).
 |---|---|
 | El núcleo arma lo mismo que el SDK oficial de JavaScript, byte a byte | 23 comprobaciones en el PC, todas correctas. 16 comparan byte a byte con `@stellar/stellar-sdk` 17.4.0: direcciones, contratos de token, pagos, llamadas `transfer` y `transfer_from`, autorizaciones y filtros de eventos. Las otras 7 cubren la lectura de direcciones y eventos, el texto SEP-7 y los montos |
 | Un microcontrolador paga solo en testnet | Un ESP32-S3 armó, firmó y envió un [pago clásico](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) y una [transferencia en el contrato del token](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), y después los detectó en los eventos de la red (21 de noviembre de 2026) |
-| Un terminal cobra con tarjeta firmando él mismo | El terminal de demostración de Paizap firmó ocho cobros en testnet con `transfer_from`, cuatro de ellos con tarjeta física; el último con tarjeta es [esta transacción](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) (22 de noviembre de 2026) |
+| Un terminal cobra con tarjeta firmando él mismo | El terminal de demostración de Paizap cobra con tarjeta NFC en testnet con `transfer_from`, armado y firmado en el aparato: [esta transacción](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) es uno de esos cobros, y su única firma es la del aparato (22 de noviembre de 2026) |
 | Los ejemplos compilan | Para ESP32-S3 y ESP32 clásico, con PlatformIO |
 
 Medidas en el ESP32-S3:
@@ -289,7 +289,7 @@ con RP2040 y Wi-Fi cuesta [USD 6](https://www.raspberrypi.com/news/raspberry-pi-
 Lo primero que comprobamos es que alguien ajeno al equipo use la librería sin nuestra ayuda. Lo
 que sigue se financia con [Stellar Instawards](https://stellar.org/blog/ecosystem/introducing-the-stellar-ambassador-program):
 premios de hasta USD 15.000 para experimentar y hacer prototipos, que se piden por medio de los
-capítulos de embajadores de Stellar.
+capítulos de embajadores de Stellar. El equipo ya ganó uno con un proyecto anterior, Kiba.
 
 ## Comentarios y aportes
 
@@ -313,5 +313,5 @@ demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK.
 
 | Quién | Rol | Qué aporta |
 |---|---|---|
-| **Rodion Romanovich** ([@CoKeFish](https://github.com/CoKeFish)) | Hardware y Stellar | Ingeniería electrónica e integración blockchain para microcontroladores |
+| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware y Stellar | Ingeniero electrónico: ingeniería electrónica e integración blockchain para microcontroladores. Con su proyecto anterior sobre Stellar, [Kiba](https://github.com/CoKeFish/kiba) (pagos por llamada en USDC), ganó un Stellar Instaward. Antes hizo [Mesura](https://github.com/CoKeFish/mesura-firmware), sensores IoT sobre Arduino, ESP32 y Raspberry Pi |
 | **Clyn Roje Quispe Villegas** | Negocio y producto | Desarrollo de negocio y enfoque de producto |
