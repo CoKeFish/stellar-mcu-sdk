@@ -227,6 +227,7 @@ Measurements on the ESP32-S3:
 |---|---|
 | SDK core | 3.4 KB of flash, no fixed memory |
 | Ed25519 signature | 18 KB of flash |
+| In the demo terminal, turning on the signed charge | Adds 23.5 KB to the firmware: the core, the signature, the node client with its certificate and the charge logic |
 | Building and signing a payment | 7 milliseconds |
 | From sending a payment to seeing it confirmed | 3 to 6 seconds |
 | One node query, with the connection open | 0.3 seconds |

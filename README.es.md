@@ -231,6 +231,7 @@ Medidas en el ESP32-S3:
 |---|---|
 | Núcleo del SDK | 3,4 KB de flash, sin memoria fija |
 | Firma Ed25519 | 18 KB de flash |
+| En el terminal de demostración, activar el cobro firmado | Suma 23,5 KB al firmware: el núcleo, la firma, el cliente del nodo con su certificado y la lógica del cobro |
 | Armar y firmar un pago | 7 milisegundos |
 | De enviar un pago a verlo confirmado | 3 a 6 segundos |
 | Una consulta al nodo, con la conexión abierta | 0,3 segundos |
