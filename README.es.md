@@ -40,8 +40,8 @@ El código y sus comentarios están en inglés; este README y la
 
 > Estado: librería abierta con demo pública en vivo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
 >
-> Es un proyecto nuevo. Pronto sumará nuevas características y, con el tiempo, irá ampliando el
-> número de microcontroladores soportados: mira la [hoja de ruta](#hoja-de-ruta).
+> Es un proyecto reciente: próximamente se sumarán nuevas características y, con el tiempo, se
+> irá ampliando el número de microcontroladores soportados. Mira la [hoja de ruta](#hoja-de-ruta).
 
 ## Qué hace
 

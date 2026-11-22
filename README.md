@@ -36,8 +36,8 @@ It provides:
 
 > Status: open library with a public live demo, on Stellar testnet. See [what has been verified](#what-has-been-verified).
 >
-> This is a new project. New features are coming soon, and the number of supported
-> microcontrollers will grow over time: see the [roadmap](#roadmap).
+> This is a young project: new features will be added soon, and the number of supported
+> microcontrollers will keep growing over time. See the [roadmap](#roadmap).
 
 ## What it does
 
