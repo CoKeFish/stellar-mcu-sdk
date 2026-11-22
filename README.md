@@ -2,6 +2,7 @@
 
 **English** · [Español](README.es.md)
 
+[![Tests](https://github.com/CoKeFish/stellar-mcu-sdk/actions/workflows/tests.yml/badge.svg)](https://github.com/CoKeFish/stellar-mcu-sdk/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 ![Language](https://img.shields.io/badge/language-C99-blue)
 ![Library for microcontrollers](https://img.shields.io/badge/library%20for-microcontrollers-blue)
@@ -17,7 +18,9 @@ microcontrollers, not for one chip: the core is portable C99, and the ESP32 is t
 
 **Stellar has no SDK for microcontrollers.** The [official list](https://developers.stellar.org/docs/tools/sdks/client-sdks) has client SDKs for
 JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go and C# .NET, and none
-for microcontrollers. This library is that missing piece.
+for microcontrollers. Bitcoin, Ethereum, Solana, Algorand, IoTeX and Sui already have a library
+for microcontrollers in the Arduino or PlatformIO registries; Stellar has none. This library is
+that missing piece.
 
 It provides:
 
@@ -255,6 +258,8 @@ sh tests/host/run.sh
 They build addresses, payments, contract calls, authorizations and event filters with the core
 and compare each result with what the official JavaScript SDK produces
 ([`tests/vectors/vectors.mjs`](tests/vectors/vectors.mjs) generates the reference values).
+These tests and the build of both examples run on every change
+([GitHub Actions](https://github.com/CoKeFish/stellar-mcu-sdk/actions/workflows/tests.yml)).
 
 **The example, on an ESP32.** With [PlatformIO](https://platformio.org):
 
@@ -273,6 +278,18 @@ missing.
 - **The official list has no SDK for microcontrollers.** The documentation lists client SDKs for
   JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go and C# .NET
   ([Stellar Docs](https://developers.stellar.org/docs/tools/sdks/client-sdks)).
+- **Other networks already have one.** Bitcoin ([uBitcoin](https://github.com/micro-bitcoin/uBitcoin)),
+  Ethereum ([Web3E](https://github.com/AlphaWallet/Web3E)), Solana
+  ([sol](https://github.com/torrey-xyz/solduino)), Algorand
+  ([Vertices](https://github.com/vertices-network/c-algorand-sdk)), IoTeX
+  ([arduino-sdk](https://github.com/iotexproject/arduino-sdk)) and Sui
+  ([MicroSui](https://github.com/MicroSui/microsui-lib)) each have a library for microcontrollers
+  in the Arduino or PlatformIO registries. Stellar has none there.
+- **Payments inside machines are already a business.** Nayax
+  [closed 2025](https://ir.nayax.com/news/news-details/2026/Nayax-Reports-Fourth-Quarter-and-Full-Year-2025-Results/default.aspx)
+  with 1.46 million connected devices and close to 115,000 customers; Cantaloupe
+  [closed its fiscal year 2025](https://www.sec.gov/Archives/edgar/data/0000896429/000162828025044777/ctlp-20251010.htm)
+  with 1.28 million active devices.
 - **Whoever tried either wrote it by hand or put a computer in the middle.** The author of an
   ESP8266 candy dispenser wrote: "Because I'm not aware of any existing stellar arduino sdk, I've
   implemented consuming the horizon payment stream http endpoint on my own"
@@ -292,10 +309,13 @@ From November 23 to December 22, 2026:
 
 | Week | What | Goal |
 |---|---|---|
-| 1 (Nov 23 to 29) | A getting-started guide for the library and its two examples | Guide published: with it alone, an example builds and pays on testnet |
+| 1 (Nov 23 to 29) | Publish the library in the Arduino and PlatformIO registries, with its first numbered version | Version 0.1 installable from both registries |
 | 2 (Nov 30 to Dec 6) | Bring the same core to a second microcontroller, the RP2040 with its Wi-Fi chip. Start the Stellar Instawards application, through the local ambassador chapter | The same payment example runs on 2 microcontrollers |
-| 3 (Dec 7 to 13) | A new example: charging with an order number. The library already reads that number from the payment; the example waits for someone else's payment and recognizes it by that number | Example published and tested on testnet |
+| 3 (Dec 7 to 13) | A new example: the device pays in testnet USDC with a call to the token contract. The core already builds that call; the example runs it on the device, with no server | Example published and tested on testnet, with its transaction linked |
 | 4 (Dec 14 to 22) | Submit the Stellar Instawards application | Application submitted |
+
+Two things that were in this plan are already published: the [getting-started guide](https://paizap.vercel.app/sdk/inicio-rapido/)
+and the [example that charges with an order number](examples/esp32_standalone_device).
 
 The month costs the time of the two of us and the hardware to test the second microcontroller: a
 board with an RP2040 and Wi-Fi costs [$6](https://www.raspberrypi.com/news/raspberry-pi-pico-w-your-6-iot-platform/).
@@ -310,7 +330,8 @@ ambassador chapters.
 Today everything runs on testnet. Moving to mainnet changes three values, not the code:
 
 - **The node.** Use the one of an [RPC provider](https://developers.stellar.org/docs/data/apis/rpc/providers) with mainnet
-  access, with its root certificate in `platforms/esp32-arduino/root_ca.h`.
+  access: its host in `STELLAR_RPC_HOST`, its path, if the address has one, in
+  `STELLAR_RPC_PATH`, and its root certificate in `platforms/esp32-arduino/root_ca.h`.
 - **The network.** The network passphrase goes from `Test SDF Network ; September 2015` to
   `Public Global Stellar Network ; September 2015` ([Stellar Docs](https://developers.stellar.org/docs/networks)). The
   identifier that goes into every signature comes from it.
