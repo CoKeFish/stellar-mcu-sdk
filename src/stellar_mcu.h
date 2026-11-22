@@ -58,8 +58,10 @@ typedef struct {
   uint32_t fee;          // total, in stroops
   int64_t sequence;      // the account's sequence number plus one
   uint64_t valid_until;  // Unix time; 0 = no limit
+  // Numeric memo. Only stl_tx_payment writes it: the network rejects a contract call that carries
+  // a memo (txSOROBAN_INVALID, since Protocol 25), so stl_tx_token_call leaves it out.
   bool has_memo;
-  uint64_t memo;         // numeric memo
+  uint64_t memo;
   // Account on whose behalf the operation is made, when it is not `source`. The device's signature
   // counts for that account when its key is registered there as a signer.
   bool has_op_source;
@@ -83,7 +85,7 @@ void stl_tx_begin(stl_xdr *x, uint8_t *buf, size_t cap, const uint8_t network_id
 void stl_tx_payment(stl_xdr *x, const stl_tx *t, const uint8_t destination[32], const stl_asset *a,
                     int64_t amount);
 // soroban_data = the data returned by the simulation (NULL to build the transaction that is sent
-// to be simulated).
+// to be simulated). Never writes the memo of `t`.
 void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data,
                        size_t soroban_data_len);
 // The authorization that call needs, built by the device (to compare it with the node's).

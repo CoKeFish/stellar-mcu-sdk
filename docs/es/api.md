@@ -63,7 +63,7 @@ typedef struct {
   uint32_t fee;          // total, en stroops
   int64_t sequence;      // la de la cuenta más uno
   uint64_t valid_until;  // tiempo Unix; 0 = sin límite
-  bool has_memo;
+  bool has_memo;         // el memo solo lo escribe stl_tx_payment
   uint64_t memo;         // memo numérico
   bool has_op_source;    // la operación se hace en nombre de otra cuenta
   uint8_t op_source[32];
@@ -85,7 +85,7 @@ corto, el campo `overflow` del escritor pasa a `true`: revísalo antes de enviar
 |---|---|
 | `void stl_tx_begin(stl_xdr *x, uint8_t *buf, size_t cap, const uint8_t network_id[32])` | Empieza una transacción en `buf` |
 | `void stl_tx_payment(stl_xdr *x, const stl_tx *t, const uint8_t destination[32], const stl_asset *a, int64_t amount)` | Un pago clásico. `a` es `NULL` para XLM |
-| `void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data, size_t soroban_data_len)` | Una llamada a un contrato de token (SEP-41). Pasa `NULL` en `soroban_data` para armar la transacción que se manda a `simulateTransaction`; después pasa el `transactionData` que devolvió la simulación para armar la que se firma |
+| `void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data, size_t soroban_data_len)` | Una llamada a un contrato de token (SEP-41). Pasa `NULL` en `soroban_data` para armar la transacción que se manda a `simulateTransaction`; después pasa el `transactionData` que devolvió la simulación para armar la que se firma. Nunca escribe el memo, aunque `has_memo` esté puesto: la red rechaza una llamada a contrato que lo lleve (`txSOROBAN_INVALID`, desde el protocolo 25; [Stellar Docs](https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos)) |
 | `void stl_token_auth(stl_xdr *x, const stl_token_call *call)` | La autorización que esa llamada necesita, armada por el aparato, para compararla con la que propone el nodo |
 | `void stl_tx_sign(stl_xdr *x, const stl_crypto *c, const uint8_t seed[32], const uint8_t public_key[32], uint8_t hash[32])` | Firma y agrega la firma. Deja el hash de la transacción en `hash` |
 | `void stl_tx_unsigned(stl_xdr *x)` | Cierra el sobre sin firmas, para simular |

@@ -177,7 +177,10 @@ int main(void) {
   stl_tx_sign(&x, &CRYPTO, V_SEED_A, V_PUB_A, h);
   compare("payment_usdc_envelope", envelope_b64(&x), V_TX2_ENVELOPE);
 
-  // 4. Call to the token contract: transfer(from, to, amount)
+  // 4. Call to the token contract: transfer(from, to, amount). The network rejects a contract call
+  //    that carries a memo, so the core leaves it out even when the transaction asks for one: with
+  //    has_memo set, these envelopes still have to match the JavaScript SDK's, which carry none.
+  base.has_memo = true;
   const stl_token_call transfer = {contract, "transfer", {V_PUB_A, V_PUB_B, NULL}, 2, 5000000};
   int soroban_data_len = stl_b64_decode(V_SOROBAN_DATA, strlen(V_SOROBAN_DATA), soroban_data, sizeof soroban_data);
   stl_tx_begin(&x, g_tx, sizeof g_tx, V_NETWORK_ID);

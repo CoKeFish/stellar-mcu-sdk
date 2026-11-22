@@ -180,7 +180,9 @@ void stl_tx_begin(stl_xdr *x, uint8_t *buf, size_t cap, const uint8_t network_id
   u32(x, 2);  // ENVELOPE_TYPE_TX
 }
 
-static void header(stl_xdr *x, const stl_tx *t) {
+// `memo`: whether this kind of transaction may carry one. A contract call may not: the network
+// rejects it with txSOROBAN_INVALID (since Protocol 25), so the memo is never written there.
+static void header(stl_xdr *x, const stl_tx *t, bool memo) {
   u32(x, 0);  // source: Ed25519 key, not multiplexed
   fixed(x, t->source, 32);
   u32(x, t->fee);
@@ -192,7 +194,7 @@ static void header(stl_xdr *x, const stl_tx *t) {
   } else {
     u32(x, 0);
   }
-  if (t->has_memo) {
+  if (memo && t->has_memo) {
     u32(x, 2);  // MEMO_ID
     u64(x, t->memo);
   } else {
@@ -210,7 +212,7 @@ static void header(stl_xdr *x, const stl_tx *t) {
 
 void stl_tx_payment(stl_xdr *x, const stl_tx *t, const uint8_t destination[32], const stl_asset *a,
                     int64_t amount) {
-  header(x, t);
+  header(x, t, true);
   u32(x, 1);  // PAYMENT
   u32(x, 0);
   fixed(x, destination, 32);
@@ -247,7 +249,7 @@ void stl_token_auth(stl_xdr *x, const stl_token_call *call) {
 
 void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data,
                        size_t soroban_data_len) {
-  header(x, t);
+  header(x, t, false);  // a contract call cannot carry a memo
   u32(x, 24);  // INVOKE_HOST_FUNCTION
   u32(x, 0);   // call a contract
   token_call(x, call);

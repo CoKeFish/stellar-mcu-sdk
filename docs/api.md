@@ -60,7 +60,7 @@ typedef struct {
   uint32_t fee;          // total, in stroops
   int64_t sequence;      // the account's sequence number plus one
   uint64_t valid_until;  // Unix time; 0 = no limit
-  bool has_memo;
+  bool has_memo;         // only stl_tx_payment writes the memo
   uint64_t memo;         // numeric memo
   bool has_op_source;    // the operation is made on behalf of another account
   uint8_t op_source[32];
@@ -82,7 +82,7 @@ too small, the writer's `overflow` field becomes `true`: check it before sending
 |---|---|
 | `void stl_tx_begin(stl_xdr *x, uint8_t *buf, size_t cap, const uint8_t network_id[32])` | Starts a transaction in `buf` |
 | `void stl_tx_payment(stl_xdr *x, const stl_tx *t, const uint8_t destination[32], const stl_asset *a, int64_t amount)` | A classic payment. `a` is `NULL` for XLM |
-| `void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data, size_t soroban_data_len)` | A call to a token contract (SEP-41). Pass `NULL` as `soroban_data` to build the transaction that is sent to `simulateTransaction`; then pass the `transactionData` the simulation returned to build the one that is signed |
+| `void stl_tx_token_call(stl_xdr *x, const stl_tx *t, const stl_token_call *call, const uint8_t *soroban_data, size_t soroban_data_len)` | A call to a token contract (SEP-41). Pass `NULL` as `soroban_data` to build the transaction that is sent to `simulateTransaction`; then pass the `transactionData` the simulation returned to build the one that is signed. It never writes the memo, even when `has_memo` is set: the network rejects a contract call that carries one (`txSOROBAN_INVALID`, since Protocol 25; [Stellar Docs](https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos)) |
 | `void stl_token_auth(stl_xdr *x, const stl_token_call *call)` | The authorization that call needs, built by the device, to compare it with the one the node proposes |
 | `void stl_tx_sign(stl_xdr *x, const stl_crypto *c, const uint8_t seed[32], const uint8_t public_key[32], uint8_t hash[32])` | Signs and appends the signature. Leaves the transaction hash in `hash` |
 | `void stl_tx_unsigned(stl_xdr *x)` | Closes the envelope with no signatures, for simulation |

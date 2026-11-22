@@ -174,6 +174,8 @@ if (stl_event_amount(value, value_len, &amount, &has_memo, &order)) {
 ```c
 stl_token_call call = {token_contract, "transfer_from", {spender, customer, merchant}, 3, 25000000};
 
+// La red rechaza una llamada a contrato que lleve memo, así que stl_tx_token_call nunca lo
+// escribe, aunque t.has_memo esté puesto.
 stl_tx_begin(&x, envelope, sizeof envelope, network_id);
 stl_tx_token_call(&x, &t, &call, NULL, 0);  // 1. armarla para simulateTransaction
 stl_tx_unsigned(&x);
