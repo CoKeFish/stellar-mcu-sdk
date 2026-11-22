@@ -30,15 +30,18 @@ It provides:
 
 **Try it:** [live demo](https://paizap.vercel.app/demo/) · [video of the device](https://youtube.com/shorts/vNxY6FoxzuY) · [documentation](https://paizap.vercel.app/sdk/)
 
-> Status: in development, on Stellar testnet. See [what has been verified](#what-has-been-verified).
+> Status: open library with a public live demo, on Stellar testnet. See [what has been verified](#what-has-been-verified).
 
 ## What it does
 
 | Piece | What the device does |
 |---|---|
-| **Charge** | Builds the payment request (SEP-7) to show it as a QR code |
+| **Charge** | Builds the payment request (SEP-7). The [browser demo](https://paizap.vercel.app/demo/) shows it as a QR code and the standalone example prints it over serial |
 | **Confirm** | Asks a Stellar RPC node and checks by itself that the payment arrived, with its amount and its order number, if the payment carries one |
 | **Pay** | Keeps its own key, builds the transaction, signs it and sends it: a classic payment or a call to a token contract (`transfer`, `transfer_from`) |
+
+The two examples in this repository run with no server of your own: only the device and a public
+Stellar RPC node.
 
 What you can build with those pieces:
 
@@ -318,9 +321,10 @@ in its files.
 
 Paizap brings Stellar payments to IoT devices: turnstiles, dispensers, vending machines. It
 maintains this SDK and publishes it so that anyone can build with it. Its demo, a payment terminal
-for NFC cards, runs on this SDK: its firmware, its server, its app and a
-[photo of the device](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real) are in the
-[Paizap repository](https://github.com/CoKeFish/paizap).
+for NFC cards, runs on this SDK. The library came out of that work and moved to its own repository
+at the end of the hackathon. The earlier development, with its history, is in the
+[Paizap repository](https://github.com/CoKeFish/paizap), together with the firmware, the server, the app and a
+[photo of the device](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real).
 
 ### Team
 

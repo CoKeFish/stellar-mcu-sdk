@@ -34,15 +34,18 @@ El código y sus comentarios están en inglés; este README y la
 
 **Pruébalo:** [demo en vivo](https://paizap.vercel.app/demo/) · [video del dispositivo](https://youtube.com/shorts/vNxY6FoxzuY) · [documentación](https://paizap.vercel.app/sdk/)
 
-> Estado: en desarrollo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
+> Estado: librería abierta con demo pública en vivo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
 
 ## Qué hace
 
 | Pieza | Qué hace el aparato |
 |---|---|
-| **Cobrar** | Arma el pedido de pago (SEP-7) para mostrarlo como QR |
+| **Cobrar** | Arma el pedido de pago (SEP-7). La [demo del navegador](https://paizap.vercel.app/demo/) lo muestra como QR y el ejemplo autónomo lo entrega por el puerto serie |
 | **Confirmar** | Le pregunta a un nodo de Stellar RPC y comprueba él mismo que el pago llegó, con su monto y su número de pedido, si el pago lo trae |
 | **Pagar** | Guarda su llave, arma la transacción, la firma y la envía: un pago clásico o una llamada a un contrato de token (`transfer`, `transfer_from`) |
+
+Los dos ejemplos de este repositorio funcionan sin ningún servidor propio: solo el dispositivo y
+un nodo público de Stellar RPC.
 
 Qué se puede construir con esas piezas:
 
@@ -321,9 +324,10 @@ CC0), indicada en sus archivos.
 
 Paizap lleva pagos de Stellar a dispositivos IoT: torniquetes, dispensadores, máquinas
 expendedoras. Mantiene este SDK y lo publica para que cualquiera construya con él. Su
-demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK: su firmware, su servidor,
-su app y la [foto del dispositivo](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real) están en el
-[repositorio de Paizap](https://github.com/CoKeFish/paizap).
+demostración, un terminal de cobro con tarjeta NFC, corre sobre este SDK. La librería salió de ese
+trabajo y se separó a su propio repositorio al final de la hackathon. El desarrollo anterior, con
+su historial, está en el [repositorio de Paizap](https://github.com/CoKeFish/paizap), junto con el firmware,
+el servidor, la app y la [foto del dispositivo](https://github.com/CoKeFish/paizap#la-demo-en-un-aparato-real).
 
 ### Equipo
 
