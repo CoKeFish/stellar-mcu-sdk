@@ -311,5 +311,5 @@ for NFC cards, runs on this SDK.
 
 | Who | Role | What they bring |
 |---|---|---|
-| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware and Stellar | Electronics engineer: electronics engineering and blockchain integration for microcontrollers. His previous project on Stellar is [Kiba](https://github.com/CoKeFish/kiba), pay-per-call payments in USDC, built for the Stellar PULSO Hackathon. Before that he built [Mesura](https://github.com/CoKeFish/mesura-firmware), IoT sensors on Arduino, ESP32 and Raspberry Pi |
-| **Clyn Roje Quispe Villegas** | Business and product | Business development and product focus |
+| **Rodion Romanovich** ([rodion.com.co](https://rodion.com.co), [@CoKeFish](https://github.com/CoKeFish)) | Hardware and Stellar | Electronics engineer. Responsible for the electronic design, the firmware and the development of Stellar MCU SDK |
+| **Clyn Roje Quispe Villegas** | Business and product | Responsible for business development and product focus. In charge of the project presentation, the brand identity and the video production |
