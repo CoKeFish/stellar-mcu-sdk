@@ -28,7 +28,7 @@ It provides:
 - payment requests (SEP-7) to show as a QR code,
 - a network client for Stellar RPC over HTTPS for the first supported microcontroller, the ESP32.
 
-**Try it:** [live demo](https://paizap.vercel.app/demo/) · [documentation](https://paizap.vercel.app/sdk/)
+**Try it:** [live demo](https://paizap.vercel.app/demo/) · [video of the device](https://youtube.com/shorts/vNxY6FoxzuY) · [documentation](https://paizap.vercel.app/sdk/)
 
 > Status: in development, on Stellar testnet. See [what has been verified](#what-has-been-verified).
 

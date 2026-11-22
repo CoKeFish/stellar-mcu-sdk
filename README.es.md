@@ -32,7 +32,7 @@ Qué trae:
 El código y sus comentarios están en inglés; este README y la
 [referencia de la API](docs/es/api.md) están también en español.
 
-**Pruébalo:** [demo en vivo](https://paizap.vercel.app/demo/) · [documentación](https://paizap.vercel.app/sdk/)
+**Pruébalo:** [demo en vivo](https://paizap.vercel.app/demo/) · [video del dispositivo](https://youtube.com/shorts/vNxY6FoxzuY) · [documentación](https://paizap.vercel.app/sdk/)
 
 > Estado: en desarrollo, sobre Stellar testnet. Mira [qué está comprobado](#qué-está-comprobado).
 
