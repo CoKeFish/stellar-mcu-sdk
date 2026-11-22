@@ -1,0 +1,36 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  host:
+    name: Core against the official JavaScript SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build and run the host tests
+        run: sh tests/host/run.sh
+
+  examples:
+    name: Build ${{ matrix.example }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example: [esp32_pay_and_confirm, esp32_standalone_device]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v6
+        with:
+          path: ~/.platformio
+          key: platformio-${{ hashFiles('examples/**/platformio.ini') }}
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build for the ESP32-S3 and the classic ESP32
+        run: pio run -d examples/${{ matrix.example }} -e s3 -e esp32
