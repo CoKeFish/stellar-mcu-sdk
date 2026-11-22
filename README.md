@@ -6,21 +6,21 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 ![Language](https://img.shields.io/badge/language-C99-blue)
 ![Library for microcontrollers](https://img.shields.io/badge/library%20for-microcontrollers-blue)
-![First microcontroller](https://img.shields.io/badge/first%20microcontroller-ESP32-blue)
 ![Network](https://img.shields.io/badge/Stellar-testnet-blue)
 
 **Stellar payments on IoT devices.** `stellar-mcu-sdk` is a C library for microcontrollers, designed to
 bring payment systems to IoT devices such as turnstiles, dispensers and vending machines. It talks
 to [Stellar RPC](https://developers.stellar.org/docs/data/apis/rpc) and builds and signs
 transactions on the device itself, with no server of your own in between. It is a library for
-microcontrollers, not for one chip: the core is portable C99, and the ESP32 is the first. Built by
+microcontrollers, not for one chip: the core is portable C99. Built by
 [Paizap](https://github.com/CoKeFish/paizap).
 
 **Stellar has no SDK for microcontrollers.** The [official list](https://developers.stellar.org/docs/tools/sdks/client-sdks) has client SDKs for
 JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go and C# .NET, and none
 for microcontrollers. Bitcoin, Ethereum, Solana, Algorand, IoTeX and Sui already have a library
-for microcontrollers in the Arduino or PlatformIO registries; Stellar has none. This library is
-that missing piece.
+for microcontrollers in the Arduino or PlatformIO registries; Stellar has none. This library
+exists to fill that gap. It is open source and free to use, under the
+[Apache 2.0 license](LICENSE).
 
 It provides:
 
@@ -29,7 +29,8 @@ It provides:
 - what a device needs to query a Stellar RPC node and read the answer: accounts, transaction
   status and payment events,
 - payment requests (SEP-7) to show as a QR code,
-- a network client for Stellar RPC over HTTPS for the first supported microcontroller, the ESP32.
+- a network client for Stellar RPC over HTTPS, for each
+  [supported microcontroller](#supported-microcontrollers).
 
 **Try it:** [live demo](https://paizap.vercel.app/demo/) · [video of the device](https://youtube.com/shorts/vNxY6FoxzuY) · [documentation](https://paizap.vercel.app/sdk/)
 
@@ -97,7 +98,7 @@ Then include it:
 
 ```c
 #include "stellar_mcu.h"   // the core
-#include "stellar_rpc.h"   // the ESP32 client for Stellar RPC
+#include "stellar_rpc.h"   // the client for Stellar RPC
 ```
 
 With another build system, compile `src/stellar_mcu.c`, the files for your microcontroller and the two
@@ -106,7 +107,7 @@ Monocypher files, and add those three folders to the include path.
 ## Quick examples
 
 `CRYPTO` holds the two functions your microcontroller provides (`stl_crypto`); the
-[full example](examples/esp32_pay_and_confirm/src/main.cpp) shows them for ESP32.
+[full example](examples/esp32_pay_and_confirm/src/main.cpp) shows them.
 
 ### Send a payment
 
@@ -181,7 +182,7 @@ stl_tx_sign(&x, &CRYPTO, seed, public_key, hash);                  //    and sig
 
 | Guide | Description |
 |---|---|
-| [API reference](docs/api.md) | Every function of the core and of the ESP32 client |
+| [API reference](docs/api.md) | Every function of the core and of the Stellar RPC client |
 | [Example: pay and confirm](examples/esp32_pay_and_confirm/src/main.cpp) | A complete program: the device creates its key, pays 1 XLM, waits for the confirmation and finds the payment in the network's events |
 | [Example: standalone device](examples/esp32_standalone_device/) | An IoT payment device on one microcontroller, with a screen, a keypad and a relay: it charges with a QR code and waits for the payment, pays, and shows its account and balance |
 | [Referencia de la API](docs/es/api.md) | The API reference, in Spanish |
@@ -229,11 +230,11 @@ transactions were accepted on testnet running protocol 30 (November 21, 2026).
 | What | How it was verified |
 |---|---|
 | The core builds the same bytes as the official JavaScript SDK | 23 checks on a PC, all passing. 16 compare byte for byte with `@stellar/stellar-sdk` 17.4.0: addresses, token contracts, payments, `transfer` and `transfer_from` calls, authorizations and event filters. The other 7 cover reading addresses and events, the SEP-7 text and amounts |
-| A microcontroller pays on its own on testnet | An ESP32-S3 built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
+| A microcontroller pays on its own on testnet | It built, signed and sent a [classic payment](https://stellar.expert/explorer/testnet/tx/ca284b2c462693e4b2b6cbf0169b1732d9f165d4fdfa5efa0cf512975c0d0569) and a [transfer on the token contract](https://stellar.expert/explorer/testnet/tx/65894777de6cc74e886a70964700e123918b67fce4538dfe64441eda9fee8e06), and then detected them in the network's events (November 21, 2026) |
 | A terminal charges a card and signs by itself | [Paizap's demo terminal](https://github.com/CoKeFish/paizap) charges NFC cards on testnet with `transfer_from`, built and signed on the device: [this transaction](https://stellar.expert/explorer/testnet/tx/dab4fb6bd5882fc1ebc62faf4d17848e1db2ba4c8905a9ebdfbb8fab1b2cd09b) is one of those charges, and its only signature is the device's (November 22, 2026) |
 | The examples build | For ESP32-S3 and classic ESP32, with PlatformIO |
 
-Measurements on the ESP32-S3:
+Measurements on the [microcontroller tested on hardware](#supported-microcontrollers):
 
 | What | Measurement |
 |---|---|
@@ -273,7 +274,7 @@ These tests and the build of both examples run on every change
 ## Why this SDK exists
 
 Stellar has SDKs for the web, for phones and for servers. The one for the physical world was
-missing.
+missing, and other networks already have theirs. This library exists to fill that gap.
 
 - **The official list has no SDK for microcontrollers.** The documentation lists client SDKs for
   JavaScript, Python, Rust, iOS, Flutter, PHP, Kotlin Multiplatform, Java, Go and C# .NET
@@ -290,8 +291,8 @@ missing.
   with 1.46 million connected devices and close to 115,000 customers; Cantaloupe
   [closed its fiscal year 2025](https://www.sec.gov/Archives/edgar/data/0000896429/000162828025044777/ctlp-20251010.htm)
   with 1.28 million active devices.
-- **Whoever tried either wrote it by hand or put a computer in the middle.** The author of an
-  ESP8266 candy dispenser wrote: "Because I'm not aware of any existing stellar arduino sdk, I've
+- **Whoever tried either wrote it by hand or put a computer in the middle.** The author of a
+  microcontroller candy dispenser wrote: "Because I'm not aware of any existing stellar arduino sdk, I've
   implemented consuming the horizon payment stream http endpoint on my own"
   ([stellar-candyman](https://github.com/sui77/stellar-candyman)). SatoshiPay's candy machine
   runs Node.js on a Raspberry Pi
@@ -351,8 +352,9 @@ cost between 100 and 9,110 stroops: less than 0.001 XLM.
 
 ## License
 
-Apache 2.0. See [LICENSE](LICENSE). Monocypher keeps its own license (2-clause BSD or CC0), stated
-in its files.
+Stellar MCU SDK is open source and free to use: the Apache 2.0 license lets you use it, modify it
+and distribute it at no charge, also in commercial products. See [LICENSE](LICENSE). Monocypher
+keeps its own license (2-clause BSD or CC0), stated in its files.
 
 ## Paizap
 
